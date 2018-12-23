@@ -13,7 +13,8 @@ from decorators import login_required, format_result, output_option
 @output_option()
 @login_required
 @format_result(
-    headers=['start_date', 'name', 'distance', 'elapsed_time', 'average_speed', 'max_speed', 'average_heartrate',
+    headers=['start_date', 'name', 'distance', 'elapsed_time', 'average_speed', 'max_speed',
+             'average_heartrate',
              'max_heartrate'])
 def get_activities(page, per_page):
     result = activities.get(page, per_page)
@@ -21,6 +22,17 @@ def get_activities(page, per_page):
 
 
 def _format_activity(activity):
+    def format_name(name):
+        type_emojis = {
+            'run': u'\U0001F3C3',
+            'ride': u'\U0001F6B4',
+            'swimming': u'\U0001F3CA',
+            'workout': u'\U0001F3CB'
+        }
+        emoji = type_emojis.get(activity['type'].lower(), '')
+        is_race = 'workout_type' in activity and activity['workout_type'] == 1
+        return f'{emoji} {click.style(name, bold=is_race)}'
+
     def format_seconds(seconds):
         return f'{floor(seconds / 60):02.0f}:{seconds % 60:02.0f}'
 
@@ -38,10 +50,8 @@ def _format_activity(activity):
     def format_heartrate(heartrate):
         return f'{heartrate:.0f} bpm'
 
-    is_race = 'workout_type' in activity and activity['workout_type'] == 1
-
     formatters = {
-        'name': lambda x: click.style(x, bold=is_race),
+        'name': format_name,
         'start_date': format_date,
         'distance': format_distance,
         'elapsed_time': format_seconds,
