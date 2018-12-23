@@ -12,11 +12,11 @@ def format_result(headers=None, single=False):
     def decorator_format_result(func):
         @functools.wraps(func)
         def wrapper_format_result(*args, **kwargs):
-            def print_json():
+            def print_json(data):
                 prettified = json.dumps(data, indent=2, sort_keys=True)
                 click.echo(prettified)
 
-            def print_table():
+            def print_table(data):
                 table_data = [data] if single else data
                 rows = [[row[header] for header in headers] for row in table_data]
                 click.echo(tabulate(rows, headers=headers))
@@ -27,11 +27,13 @@ def format_result(headers=None, single=False):
             else:
                 output = 'table'
 
-            data = func(*args, **kwargs)
+            raw, formatted = func(*args, **kwargs)
             if output == 'json':
-                print_json()
+                print_json(formatted)
+            elif output == 'raw':
+                print_json(raw)
             else:
-                print_table()
+                print_table(formatted)
 
         return wrapper_format_result
 
