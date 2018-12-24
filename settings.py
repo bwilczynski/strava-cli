@@ -4,7 +4,7 @@ STRAVA_CLIENT_ID = os.getenv('STRAVA_CLIENT_ID')
 STRAVA_CLIENT_SECRET = os.getenv('STRAVA_CLIENT_SECRET')
 
 STRAVA_AUTH_API_BASE_URL = 'https://www.strava.com/oauth'
-STRAVA_API_BASE_URL = 'https://www.strava.com/api/v3/'
+STRAVA_API_BASE_URL = 'https://www.strava.com/api/v3'
 
 CLIENT_REDIRECT_PORT_NO = 5000
 CLIENT_REDIRECT_URL = f'http://localhost:{CLIENT_REDIRECT_PORT_NO}'

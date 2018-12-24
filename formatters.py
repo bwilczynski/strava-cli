@@ -5,7 +5,11 @@ import click
 
 
 def format_seconds(seconds):
-    return f'{floor(seconds / 60):02.0f}:{seconds % 60:02.0f}'
+    if seconds > 3600:
+        mins = floor(seconds / 60)
+        return f'{floor(mins / 60):.0f}h {mins % 60:.0f}m'
+    else:
+        return f'{floor(seconds / 60):02.0f}:{seconds % 60:02.0f}'
 
 
 def format_date(date):
@@ -30,10 +34,14 @@ def format_actvity_type(activity_type):
     type_emojis = {
         'run': u'\U0001F3C3',
         'ride': u'\U0001F6B4',
-        'swimming': u'\U0001F3CA',
+        'swim': u'\U0001F3CA',
         'workout': u'\U0001F3CB'
     }
     return type_emojis.get(activity_type.lower(), '')
+
+
+def format_elevation(elevation):
+    return f'{elevation} m'
 
 
 def format_activity(activity):
@@ -65,4 +73,21 @@ def format_athlete(athlete):
         {'key': 'username', 'value': athlete.get('username')},
         {'key': 'name', 'value': format_name()},
         {'key': 'email', 'value': athlete.get('email')}
+    ]
+
+
+def format_yearly_stats(stats):
+    formatters = {
+        'count': lambda x: x,
+        'distance': format_distance,
+        'moving_time': format_seconds,
+        'elevation_gain': format_elevation
+    }
+
+    def format_totals(totals):
+        return {k: formatter(totals.get(k)) for k, formatter in formatters.items()}
+
+    return [
+        dict(format_totals(stats[f'ytd_{activity_type}_totals']), **dict(type=format_actvity_type(f'{activity_type}')))
+        for activity_type in ['run', 'ride', 'swim']
     ]

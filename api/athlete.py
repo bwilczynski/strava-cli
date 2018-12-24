@@ -26,3 +26,8 @@ def get_activities(page, per_page):
 def get_athlete():
     response = client.get(_url('/athlete'))
     return _json(response)
+
+
+def get_stats(athlete_id):
+    response = client.get(_url(f'/athletes/{athlete_id}/stats'))
+    return _json(response)
