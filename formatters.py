@@ -41,7 +41,7 @@ def format_actvity_type(activity_type):
 
 
 def format_elevation(elevation):
-    return f'{elevation} m'
+    return f'{elevation:.0f} m'
 
 
 def format_activity(activity):
@@ -76,7 +76,15 @@ def format_athlete(athlete):
     ]
 
 
-def format_yearly_stats(stats):
+def format_recent_stats(stats):
+    return _format_stats(stats, lambda activity_type: f'recent_{activity_type}_totals')
+
+
+def format_ytd_stats(stats):
+    return _format_stats(stats, lambda activity_type: f'ytd_{activity_type}_totals')
+
+
+def _format_stats(stats, get_property_func):
     formatters = {
         'count': lambda x: x,
         'distance': format_distance,
@@ -88,6 +96,7 @@ def format_yearly_stats(stats):
         return {k: formatter(totals.get(k)) for k, formatter in formatters.items()}
 
     return [
-        dict(format_totals(stats[f'ytd_{activity_type}_totals']), **dict(type=format_actvity_type(f'{activity_type}')))
+        dict(format_totals(stats[f'{get_property_func(activity_type)}']),
+             **dict(type=format_actvity_type(f'{activity_type}')))
         for activity_type in ['run', 'ride', 'swim']
     ]
