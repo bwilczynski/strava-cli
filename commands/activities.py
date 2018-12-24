@@ -14,6 +14,6 @@ from formatters import format_activity
     headers=['start_date', 'name', 'distance', 'elapsed_time', 'average_speed', 'max_speed',
              'average_heartrate',
              'max_heartrate'])
-def get_activities(page, per_page):
+def get_activities(output, page, per_page):
     result = activities.get(page, per_page)
-    return result, [format_activity(activity) for activity in result]
+    return result if output == 'json' else [format_activity(activity) for activity in result]

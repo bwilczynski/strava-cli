@@ -21,19 +21,9 @@ def format_result(headers=None, single=False):
                 rows = [[row[header] for header in headers] for row in table_data]
                 click.echo(tabulate(rows, headers=headers))
 
-            if 'output' in kwargs:
-                output = kwargs['output']
-                del kwargs['output']
-            else:
-                output = 'table'
-
-            raw, formatted = func(*args, **kwargs)
-            if output == 'json':
-                print_json(formatted)
-            elif output == 'raw':
-                print_json(raw)
-            else:
-                print_table(formatted)
+            output = kwargs.get('output', 'table')
+            res = func(*args, **kwargs)
+            print_json(res) if output == 'json' else print_table(res)
 
         return wrapper_format_result
 
