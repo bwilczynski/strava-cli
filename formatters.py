@@ -26,14 +26,14 @@ def format_heartrate(heartrate):
     return f'{heartrate:.0f} bpm'
 
 
-def format_actvity_type(type):
+def format_actvity_type(activity_type):
     type_emojis = {
         'run': u'\U0001F3C3',
         'ride': u'\U0001F6B4',
         'swimming': u'\U0001F3CA',
         'workout': u'\U0001F3CB'
     }
-    return type_emojis.get(type.lower(), '')
+    return type_emojis.get(activity_type.lower(), '')
 
 
 def format_activity(activity):
@@ -54,3 +54,15 @@ def format_activity(activity):
     }
 
     return {k: formatter(activity[k]) if k in activity else None for k, formatter in formatters.items()}
+
+
+def format_athlete(athlete):
+    def format_name():
+        return f'{athlete.get("firstname")} {athlete.get("lastname")}'
+
+    return [
+        {'key': 'id', 'value': athlete.get('id')},
+        {'key': 'username', 'value': athlete.get('username')},
+        {'key': 'name', 'value': format_name()},
+        {'key': 'email', 'value': athlete.get('email')}
+    ]

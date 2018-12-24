@@ -18,6 +18,11 @@ def _json(response):
     return response.json()
 
 
-def get(page, per_page):
+def get_activities(page, per_page):
     response = client.get(_url('/athlete/activities'), params=dict(page=page, per_page=per_page))
+    return _json(response)
+
+
+def get_athlete():
+    response = client.get(_url('/athlete'))
     return _json(response)

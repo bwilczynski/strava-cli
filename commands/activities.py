@@ -1,6 +1,6 @@
 import click
 
-from api import activities
+from api import athlete
 from decorators import login_required, format_result, output_option
 from formatters import format_activity
 
@@ -15,5 +15,5 @@ from formatters import format_activity
              'average_heartrate',
              'max_heartrate'])
 def get_activities(output, page, per_page):
-    result = activities.get(page, per_page)
+    result = athlete.get_activities(page, per_page)
     return result if output == 'json' else [format_activity(activity) for activity in result]
