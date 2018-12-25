@@ -1,9 +1,14 @@
 import click
 
+import api.activity
 from api import athlete
 from decorators import login_required, format_result, output_option
 from formatters import format_activity_type, format_date, format_distance, format_seconds, format_speed, \
     format_heartrate
+
+SUMMARY_ACTIVITY_COLUMNS = ['start_date', 'name', 'distance', 'elapsed_time', 'average_speed', 'max_speed',
+                            'average_heartrate',
+                            'max_heartrate']
 
 
 @click.command('activities')
@@ -11,13 +16,23 @@ from formatters import format_activity_type, format_date, format_distance, forma
 @click.option('--per_page', '-PP', default=30, type=int)
 @output_option()
 @login_required
-@format_result(
-    table_columns=['start_date', 'name', 'distance', 'elapsed_time', 'average_speed', 'max_speed',
-                   'average_heartrate',
-                   'max_heartrate'])
+@format_result(table_columns=SUMMARY_ACTIVITY_COLUMNS)
 def get_activities(output, page, per_page):
     result = athlete.get_activities(page, per_page)
     return result if output == 'json' else [_format_activity(activity) for activity in result]
+
+
+@click.command('activity')
+@click.option('--index', '-I', default=1, type=int)
+@output_option()
+@login_required
+@format_result(table_columns=SUMMARY_ACTIVITY_COLUMNS, single=True)
+def get_activity(index, output):
+    activities = athlete.get_activities(index, 1)
+    activity = activities[-1]
+    activity_id = activity.get('id')
+    result = api.activity.get_activity(activity_id)
+    return result if output == 'json' else _format_activity(result)
 
 
 def _format_activity(activity):
