@@ -8,7 +8,7 @@ from tabulate import tabulate
 from config import creds_store
 
 
-def format_result(headers=None, single=False):
+def format_result(table_columns=None, single=False):
     def decorator_format_result(func):
         @functools.wraps(func)
         def wrapper_format_result(*args, **kwargs):
@@ -18,8 +18,8 @@ def format_result(headers=None, single=False):
 
             def print_table(data):
                 table_data = [data] if single else data
-                rows = [[row[header] for header in headers] for row in table_data]
-                click.echo(tabulate(rows, headers=headers))
+                rows = [[row[header] for header in table_columns] for row in table_data]
+                click.echo(tabulate(rows, headers=table_columns))
 
             output = kwargs.get('output', 'table')
             res = func(*args, **kwargs)

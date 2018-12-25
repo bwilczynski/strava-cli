@@ -1,6 +1,6 @@
 import click
 
-from commands import login, logout, get_activities, profile, stats
+from commands import login, logout, get_activities, get_profile, get_stats
 
 
 @click.group()
@@ -11,8 +11,8 @@ def cli():
 cli.add_command(login)
 cli.add_command(logout)
 cli.add_command(get_activities)
-cli.add_command(profile)
-cli.add_command(stats)
+cli.add_command(get_profile)
+cli.add_command(get_stats)
 
 if __name__ == '__main__':
     cli()
