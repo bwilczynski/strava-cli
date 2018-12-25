@@ -7,8 +7,8 @@ from formatters import format_activity_type, format_date, format_distance, forma
 
 
 @click.command('activities')
-@click.option('--page', '-p', default=1, type=int)
-@click.option('--per_page', '-pp', default=30, type=int)
+@click.option('--page', '-P', default=1, type=int)
+@click.option('--per_page', '-PP', default=30, type=int)
 @output_option()
 @login_required
 @format_result(
