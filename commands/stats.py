@@ -28,7 +28,7 @@ def _format_stats(stats):
         return {k: formatter(totals.get(k)) for k, formatter in formatters.items()}
 
     activity_types = ['run', 'ride', 'swim']
-    total_types = ['ytd', 'recent']
+    total_types = ['recent', 'ytd', 'all']
     activity_totals = [(activity_type, total_type) for activity_type in activity_types for
                        total_type in total_types]
 
