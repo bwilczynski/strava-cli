@@ -7,6 +7,8 @@ from emoji import RED_HEART, RUNNING_SHOE, UP_ARROW, DOWN_ARROW, RIGHT_ARROW
 from formatters import format_activity_type, format_date, format_distance, format_seconds, format_speed, \
     format_heartrate, format_elevation, humanize
 
+N_A = 'N/A'
+
 SUMMARY_ACTIVITY_FORMATTERS = {
     'start_date': format_date,
     'distance': format_distance,
@@ -93,9 +95,12 @@ def _format_activity(activity):
         return f"{arrow} {format_elevation(elevation_difference)}"
 
     def format_split(split):
-        average_heartrate = f"{click.style(RED_HEART, fg='red')} {format_heartrate(split.get('average_heartrate'))}"
-        average_speed = f"{click.style(RUNNING_SHOE, fg='yellow')} {format_speed(split.get('average_speed'))}"
-        elevation_difference = format_elevation_difference(split.get('elevation_difference'))
+        average_heartrate = f"{click.style(RED_HEART, fg='red')} {format_heartrate(split['average_heartrate'])}" \
+            if 'average_heartrate' in split else ''
+        average_speed = f"{click.style(RUNNING_SHOE, fg='yellow')} {format_speed(split['average_speed'])}" \
+            if 'average_speed' in split else ''
+        elevation_difference = format_elevation_difference(split['elevation_difference']) \
+            if 'elevation_difference' in split else ''
         return f'{average_speed} {average_heartrate} {elevation_difference}'
 
     def format_property(name):
@@ -124,4 +129,4 @@ def _format_activity(activity):
 
 
 def _apply_formatters(activity, formatters):
-    return {k: formatter(activity[k]) if k in activity else None for k, formatter in formatters.items()}
+    return {k: formatter(activity[k]) if k in activity else N_A for k, formatter in formatters.items()}
