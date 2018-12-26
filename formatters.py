@@ -1,6 +1,8 @@
 from datetime import datetime, timezone
 from math import floor
 
+from emoji import PERSON_RUNNING, PERSON_BIKING, PERSON_SWIMMING, PERSON_LIFTING_WEIGHTS
+
 
 def format_seconds(seconds):
     if seconds > 3600:
@@ -30,13 +32,13 @@ def format_heartrate(heartrate):
 
 def format_activity_type(activity_type):
     type_emojis = {
-        'run': u'\U0001F3C3',
-        'ride': u'\U0001F6B4',
-        'swim': u'\U0001F3CA',
-        'workout': u'\U0001F3CB'
+        'run': PERSON_RUNNING,
+        'ride': PERSON_BIKING,
+        'swim': PERSON_SWIMMING,
+        'workout': PERSON_LIFTING_WEIGHTS
     }
     return type_emojis.get(activity_type.lower(), '')
 
 
 def format_elevation(elevation):
-    return f'{elevation:.0f} m'
+    return f'{round(elevation)} m'

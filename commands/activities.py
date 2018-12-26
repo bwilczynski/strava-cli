@@ -3,6 +3,7 @@ import click
 import api.activity
 from api import athlete
 from decorators import login_required, format_result, output_option
+from emoji import RED_HEART, RUNNING_SHOE, UP_ARROW, DOWN_ARROW, RIGHT_ARROW
 from formatters import format_activity_type, format_date, format_distance, format_seconds, format_speed, \
     format_heartrate, format_elevation
 
@@ -73,6 +74,17 @@ def _format_activity(activity):
     def format_gear(gear):
         return f'{gear.get("name")} ({format_distance(gear.get("distance", 0))})'
 
+    def format_elevation_difference(elevation_difference):
+        difference = round(elevation_difference)
+        arrow = UP_ARROW if difference > 0 else DOWN_ARROW if difference < 0 else RIGHT_ARROW
+        return f"{arrow} {format_elevation(elevation_difference)}"
+
+    def format_split(split):
+        average_heartrate = f"{click.style(RED_HEART, fg='red')} {format_heartrate(split.get('average_heartrate'))}"
+        average_speed = f"{click.style(RUNNING_SHOE, fg='yellow')} {format_speed(split.get('average_speed'))}"
+        elevation_difference = format_elevation_difference(split.get('elevation_difference'))
+        return f'{average_speed} {average_heartrate} {elevation_difference}'
+
     formatters = {
         'name': format_name,
         **SUMMARY_ACTIVITY_FORMATTERS,
@@ -81,10 +93,16 @@ def _format_activity(activity):
         'device_name': no_formatter,
         'gear': format_gear,
     }
-    activity = _apply_formatters(activity, formatters)
+    basic_data = [
+        {'key': k, 'value': v} for k, v in _apply_formatters(activity, formatters).items()
+    ]
+    split_data = [
+        {'key': f"Split {split.get('split')}", 'value': format_split(split)} for split in activity.get('splits_metric')
+    ]
 
     return [
-        {'key': k, 'value': v} for k, v in activity.items()
+        *basic_data,
+        *split_data
     ]
 
 
