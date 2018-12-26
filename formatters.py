@@ -1,3 +1,4 @@
+import re
 from datetime import datetime, timezone
 from math import floor
 
@@ -42,3 +43,10 @@ def format_activity_type(activity_type):
 
 def format_elevation(elevation):
     return f'{round(elevation)} m'
+
+
+def humanize(word):
+    word = word.replace('_', ' ')
+    word = re.sub(r"(?i)([a-z\d]*)", lambda m: m.group(1).lower(), word)
+    word = re.sub(r"^\w", lambda m: m.group(0).upper(), word)
+    return word

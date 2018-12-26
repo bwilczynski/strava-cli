@@ -6,9 +6,10 @@ from click import option
 from tabulate import tabulate
 
 from config import creds_store
+from formatters import humanize
 
 
-def format_result(table_columns=None, single=False):
+def format_result(table_columns=None, single=False, show_table_headers=True, table_format='simple'):
     def decorator_format_result(func):
         @functools.wraps(func)
         def wrapper_format_result(*args, **kwargs):
@@ -19,7 +20,10 @@ def format_result(table_columns=None, single=False):
             def print_table(data):
                 table_data = [data] if single else data
                 rows = [[row[header] for header in table_columns] for row in table_data]
-                click.echo(tabulate(rows, headers=table_columns))
+                click.echo(
+                    tabulate(rows,
+                             headers=[humanize(header) for header in table_columns] if show_table_headers else [],
+                             tablefmt=table_format))
 
             output = kwargs.get('output', 'table')
             res = func(*args, **kwargs)
