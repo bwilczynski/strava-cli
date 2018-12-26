@@ -17,9 +17,17 @@ SUMMARY_ACTIVITY_FORMATTERS = {
     'max_heartrate': format_heartrate
 }
 
-SUMMARY_ACTIVITY_COLUMNS = ['start_date', 'name', 'distance', 'elapsed_time', 'average_speed', 'max_speed',
-                            'average_heartrate',
-                            'max_heartrate']
+SUMMARY_ACTIVITY_COLUMNS = [
+    'index',
+    'start_date',
+    'name',
+    'distance',
+    'elapsed_time',
+    'average_speed',
+    'max_speed',
+    'average_heartrate',
+    'max_heartrate'
+]
 
 
 @click.command('activities')
@@ -28,9 +36,11 @@ SUMMARY_ACTIVITY_COLUMNS = ['start_date', 'name', 'distance', 'elapsed_time', 'a
 @output_option()
 @login_required
 @format_result(table_columns=SUMMARY_ACTIVITY_COLUMNS)
-def get_activities(output, page, per_page):
+def get_activities(output, page=1, per_page=30):
     result = athlete.get_activities(page, per_page)
-    return result if output == 'json' else [_format_summary_activity(activity) for activity in result]
+    return result if output == 'json' else [_format_summary_activity(index + (page - 1) * per_page + 1, activity) for
+                                            index, activity in
+                                            enumerate(result)]
 
 
 @click.command('activity')
@@ -52,7 +62,7 @@ def _format_activity_name(name, activity):
     return f'{activity_type} {click.style(name, bold=is_race)}'
 
 
-def _format_summary_activity(activity):
+def _format_summary_activity(index, activity):
     def format_name(name):
         return _format_activity_name(name, activity)
 
@@ -61,7 +71,10 @@ def _format_summary_activity(activity):
         **SUMMARY_ACTIVITY_FORMATTERS
     }
 
-    return _apply_formatters(activity, formatters)
+    return {
+        'index': index,
+        **_apply_formatters(activity, formatters)
+    }
 
 
 def _format_activity(activity):
