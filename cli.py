@@ -1,6 +1,6 @@
 import click
 
-from commands import login, logout, get_activities, get_profile, get_stats, get_activity
+from commands import login, logout, get_profile, get_stats, get_activities, get_activity
 
 
 @click.group()

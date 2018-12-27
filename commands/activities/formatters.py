@@ -1,13 +1,8 @@
 import click
 
-import api.activity
-from api import athlete
-from decorators import login_required, format_result, output_option
-from emoji import RED_HEART, RUNNING_SHOE, UP_ARROW, DOWN_ARROW, RIGHT_ARROW
-from formatters import format_activity_type, format_date, format_distance, format_seconds, format_speed, \
-    format_heartrate, format_elevation, humanize
-
-N_A = 'N/A'
+from emoji import UP_ARROW, DOWN_ARROW, RIGHT_ARROW, RED_HEART, RUNNING_SHOE
+from formatters import format_activity_type, format_distance, format_elevation, format_heartrate, format_speed, \
+    humanize, format_date, format_seconds
 
 SUMMARY_ACTIVITY_FORMATTERS = {
     'start_date': format_date,
@@ -19,43 +14,11 @@ SUMMARY_ACTIVITY_FORMATTERS = {
     'max_heartrate': format_heartrate
 }
 
-SUMMARY_ACTIVITY_COLUMNS = [
-    'index',
-    'start_date',
-    'name',
-    'distance',
-    'elapsed_time',
-    'average_speed',
-    'max_speed',
-    'average_heartrate',
-    'max_heartrate'
-]
+N_A = 'N/A'
 
 
-@click.command('activities')
-@click.option('--page', '-P', default=1, type=int)
-@click.option('--per_page', '-PP', default=30, type=int)
-@output_option()
-@login_required
-@format_result(table_columns=SUMMARY_ACTIVITY_COLUMNS)
-def get_activities(output, page=1, per_page=30):
-    result = athlete.get_activities(page, per_page)
-    return result if output == 'json' else [_format_summary_activity(index + (page - 1) * per_page + 1, activity) for
-                                            index, activity in
-                                            enumerate(result)]
-
-
-@click.command('activity')
-@click.option('--index', '-I', default=1, type=int)
-@output_option()
-@login_required
-@format_result(table_columns=['key', 'value'], show_table_headers=False, table_format='plain')
-def get_activity(index, output):
-    activities = athlete.get_activities(index, 1)
-    activity = activities[-1]
-    activity_id = activity.get('id')
-    result = api.activity.get_activity(activity_id)
-    return result if output == 'json' else _format_activity(result)
+def _apply_formatters(activity, formatters):
+    return {k: formatter(activity[k]) if k in activity else N_A for k, formatter in formatters.items()}
 
 
 def _format_activity_name(name, activity):
@@ -64,7 +27,7 @@ def _format_activity_name(name, activity):
     return f'{activity_type} {click.style(name, bold=is_race)}'
 
 
-def _format_summary_activity(index, activity):
+def format_summary_activity(index, activity):
     def format_name(name):
         return _format_activity_name(name, activity)
 
@@ -79,7 +42,7 @@ def _format_summary_activity(index, activity):
     }
 
 
-def _format_activity(activity):
+def format_activity(activity):
     def format_name(name):
         return _format_activity_name(name, activity)
 
@@ -108,6 +71,7 @@ def _format_activity(activity):
 
     formatters = {
         'name': format_name,
+        'description': no_formatter,
         **SUMMARY_ACTIVITY_FORMATTERS,
         'total_elevation_gain': format_elevation,
         'calories': no_formatter,
@@ -126,7 +90,3 @@ def _format_activity(activity):
         *basic_data,
         *split_data
     ]
-
-
-def _apply_formatters(activity, formatters):
-    return {k: formatter(activity[k]) if k in activity else N_A for k, formatter in formatters.items()}
