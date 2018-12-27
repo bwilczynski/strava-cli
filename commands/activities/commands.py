@@ -9,12 +9,9 @@ SUMMARY_ACTIVITY_COLUMNS = [
     'index',
     'start_date',
     'name',
-    'distance',
     'elapsed_time',
-    'average_speed',
-    'max_speed',
-    'average_heartrate',
-    'max_heartrate'
+    'distance',
+    'average_speed'
 ]
 
 

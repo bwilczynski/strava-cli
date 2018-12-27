@@ -6,12 +6,9 @@ from formatters import format_activity_type, format_distance, format_elevation, 
 
 SUMMARY_ACTIVITY_FORMATTERS = {
     'start_date': format_date,
-    'distance': format_distance,
     'elapsed_time': format_seconds,
-    'average_speed': format_speed,
-    'max_speed': format_speed,
-    'average_heartrate': format_heartrate,
-    'max_heartrate': format_heartrate
+    'distance': format_distance,
+    'average_speed': format_speed
 }
 
 N_A = 'N/A'
