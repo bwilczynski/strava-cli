@@ -3,11 +3,12 @@ import click
 from decorators import format_result
 from emoji import UP_ARROW, DOWN_ARROW, RIGHT_ARROW, RED_HEART, RUNNING_SHOE
 from formatters import format_activity_type, format_distance, format_elevation, format_heartrate, format_speed, \
-    humanize, format_date, format_seconds
+    humanize, format_date, format_seconds, noop_formatter
 
 N_A = 'N/A'
 
 SUMMARY_ACTIVITY_FORMATTERS = {
+    'id': noop_formatter,
     'start_date': format_date,
     'elapsed_time': format_seconds,
     'distance': format_distance,
@@ -15,7 +16,7 @@ SUMMARY_ACTIVITY_FORMATTERS = {
 }
 
 SUMMARY_ACTIVITY_COLUMNS = [
-    'index',
+    'id',
     'start_date',
     'name',
     'elapsed_time',
@@ -25,11 +26,10 @@ SUMMARY_ACTIVITY_COLUMNS = [
 
 
 @format_result(table_columns=SUMMARY_ACTIVITY_COLUMNS)
-def format_activities_result(result, index_offset, output=None, quiet=None):
+def format_activities_result(result, output=None, quiet=None):
     return result if (quiet or output == 'json') else [
-        _format_summary_activity(index + index_offset, activity) for
-        index, activity in
-        enumerate(result)]
+        _format_summary_activity(activity) for
+        activity in result]
 
 
 @format_result(table_columns=['key', 'value'], show_table_headers=False, table_format='plain')
@@ -43,7 +43,7 @@ def _format_activity_name(name, activity):
     return f'{activity_type} {click.style(name, bold=is_race)}'
 
 
-def _format_summary_activity(index, activity):
+def _format_summary_activity(activity):
     def format_name(name):
         return _format_activity_name(name, activity)
 
@@ -52,18 +52,12 @@ def _format_summary_activity(index, activity):
         **SUMMARY_ACTIVITY_FORMATTERS
     }
 
-    return {
-        'index': index,
-        **_apply_formatters(activity, formatters)
-    }
+    return _apply_formatters(activity, formatters)
 
 
 def _format_activity(activity):
     def format_name(name):
         return _format_activity_name(name, activity)
-
-    def no_formatter(value):
-        return value
 
     def format_gear(gear):
         return f'{gear.get("name")} ({format_distance(gear.get("distance", 0))})'
@@ -87,11 +81,11 @@ def _format_activity(activity):
 
     formatters = {
         'name': format_name,
-        'description': no_formatter,
+        'description': noop_formatter,
         **SUMMARY_ACTIVITY_FORMATTERS,
         'total_elevation_gain': format_elevation,
-        'calories': no_formatter,
-        'device_name': no_formatter,
+        'calories': noop_formatter,
+        'device_name': noop_formatter,
         'gear': format_gear,
     }
     basic_data = [

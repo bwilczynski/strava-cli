@@ -1,8 +1,9 @@
 from ._api import url, json, client
 
 
-def get_activities(page=None, per_page=None):
-    response = client.get(url('/athlete/activities'), params=dict(page=page, per_page=per_page))
+def get_activities(**kwargs):
+    response = client.get(url('/athlete/activities'),
+                          params=kwargs)
     return json(response)
 
 

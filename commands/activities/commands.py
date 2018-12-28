@@ -1,4 +1,5 @@
 import click
+from dateparser import parse
 
 import api.activity
 from api import athlete
@@ -7,28 +8,29 @@ from .formatters import format_activities_result, format_activity_result
 
 
 @click.command('activities')
+@output_option()
+@click.option('--quiet', '-q', is_flag=True, default=False)
 @click.option('--page', '-p', default=1, type=int)
 @click.option('--per_page', '-pp', default=30, type=int)
-@click.option('--quiet', '-q', is_flag=True, default=False)
-@output_option()
+@click.option('--before', '-B')
+@click.option('--after', '-A')
 @login_required
-def get_activities(output, quiet, page=1, per_page=30):
-    result = athlete.get_activities(page, per_page)
-    index_offset = (page - 1) * per_page + 1
-    format_activities_result(result, index_offset, output=output, quiet=quiet)
+def get_activities(output, quiet, page=None, per_page=None, before=None, after=None):
+    ga_kwargs = dict()
+    if before:
+        ga_kwargs['before'] = parse(before).timestamp()
+    if after:
+        ga_kwargs['after'] = parse(after).timestamp()
+
+    result = athlete.get_activities(page=page, per_page=per_page, **ga_kwargs)
+    format_activities_result(result, output=output, quiet=quiet)
 
 
 @click.command('activity')
-@click.option('--index', '-i', default=1, type=int)
-@click.argument('activity_ids', required=False, nargs=-1)
+@click.argument('activity_ids', required=True, nargs=-1)
 @output_option()
 @login_required
-def get_activity(index, output, activity_ids):
-    if activity_ids is None:
-        activities = athlete.get_activities(index, 1)
-        activity = activities[-1]
-        activity_ids = [activity.get('id')]
-
+def get_activity(output, activity_ids=None):
     for i, activity_id in enumerate(activity_ids):
         if i > 0:
             click.echo()

@@ -50,3 +50,7 @@ def humanize(word):
     word = re.sub(r"(?i)([a-z\d]*)", lambda m: m.group(1).lower(), word)
     word = re.sub(r"^\w", lambda m: m.group(0).upper(), word)
     return word
+
+
+def noop_formatter(value):
+    return value

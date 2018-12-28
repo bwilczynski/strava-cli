@@ -13,7 +13,8 @@ setup(
         'click',
         'requests',
         'requests_oauthlib',
-        'tabulate'
+        'tabulate',
+        'dateparser'
     ],
     entry_points='''
         [console_scripts]
