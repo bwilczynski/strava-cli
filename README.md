@@ -5,7 +5,7 @@ Uses [Strava API](https://developers.strava.com/docs/reference/) to access Strav
 ## Usage
 
 ```bash
-$ strava [OPTIONS] COMMAND [ARGS]
+strava [OPTIONS] COMMAND [ARGS]
 ```
 
 ### Get Started
@@ -20,13 +20,13 @@ export STRAVA_CLIENT_SECRET={YOUR_CLIENT_SECRET}
 Login to your Strava service (opens a web browser sending user to Strava login service):
 
 ```bash
-$ strava login
+strava login
 ```
 
 For usage and help content, pass in the `--help` parameter, for example:
 
 ```bash
-$ strava --help
+strava --help
 ```
 
 ### Available commands
@@ -47,21 +47,31 @@ Type        Count  Distance    Moving time    Elevation gain
 Get last 5 activities:
 
 ```
-➜ strava activities -PP 5  
+➜ strava activities -pp 5
 
-  Index  Start date                 Name             Elapsed time    Distance    Average speed
--------  -------------------------  ---------------  --------------  ----------  ---------------
-      1  2018-12-27 17:58:49+01:00  🏃 Afternoon Run  45:19           8.02 km     05:15 /km
-      2  2018-12-25 15:38:55+01:00  🏃 Bday Run       44:56           7.32 km     05:41 /km
-      3  2018-12-23 14:29:50+01:00  🏃 Afternoon Run  48:14           6.55 km     06:17 /km
-      4  2018-12-22 20:13:31+01:00  🏃 Evening Run    37:34           7.10 km     05:16 /km
-      5  2018-12-16 16:39:56+01:00  🏃 Afternoon Run  41:54           6.31 km     05:43 /km
+        Id  Start date                 Name             Elapsed time    Distance    Average speed
+----------  -------------------------  ---------------  --------------  ----------  ---------------
+2038696223  2018-12-27 17:58:49+01:00  🏃 Afternoon Run  45:19           8.02 km     05:15 /km
+2034884699  2018-12-25 15:38:55+01:00  🏃 Bday Run       44:56           7.32 km     05:41 /km
+2031636166  2018-12-23 14:29:50+01:00  🏃 Afternoon Run  48:14           6.55 km     06:17 /km
+2030237887  2018-12-22 20:13:31+01:00  🏃 Evening Run    37:34           7.10 km     05:16 /km
+2020398424  2018-12-16 16:39:56+01:00  🏃 Afternoon Run  41:54           6.31 km     05:43 /km
+```
+
+Get activities after / before a certain date:
+
+```bash
+strava activities --after="2 weeks ago" --before="1 week ago"
+```
+
+```bash
+strava activities --after="2018-12-01"
 ```
 
 Get detailed activity information:
 
 ```
-➜ strava activity -I 14
+➜ strava activity 1958241710
 
 Name:                  🏃 30. Bieg Niepodległości
 Description:           Oficjalny czas: 46:55
@@ -85,4 +95,9 @@ Split 9:               👟 04:42 /km ❤ 165 bpm ➡ 0 m
 Split 10:              👟 04:24 /km ❤ 171 bpm ⬇ -9 m
 Split 11:              👟 04:44 /km ❤ 173 bpm ⬇ -1 m
 
+```
+Or use `xargs`:
+
+```bash
+strava activities -q --after="1 day ago" | xargs strava activity 
 ```
