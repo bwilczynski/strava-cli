@@ -101,3 +101,10 @@ Or use `xargs`:
 ```sh
 strava activities -q --after="1 day ago" | xargs strava activity 
 ```
+
+Combine JSON output with `jq`:
+
+```console
+➜ strava activities -pp 1 -q | xargs strava activity --output json | jq ".name"
+"Afternoon Run"
+```
