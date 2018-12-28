@@ -1,6 +1,7 @@
 import functools
 import json
 import os
+from enum import Enum
 
 import click
 from click import option
@@ -10,7 +11,17 @@ from config import creds_store
 from formatters import humanize
 
 
-def format_result(table_columns=None, single=False, show_table_headers=True, table_format='simple'):
+class OutputType(Enum):
+    JSON = 'json'
+    TABLE = 'table'
+
+
+class TableFormat(Enum):
+    SIMPLE = 'simple'
+    PLAIN = 'plain'
+
+
+def format_result(table_columns=None, single=False, show_table_headers=True, table_format=TableFormat.SIMPLE):
     def decorator_format_result(func):
         @functools.wraps(func)
         def wrapper_format_result(*args, **kwargs):
@@ -24,7 +35,7 @@ def format_result(table_columns=None, single=False, show_table_headers=True, tab
                 click.echo(
                     tabulate(rows,
                              headers=[humanize(header) for header in table_columns] if show_table_headers else [],
-                             tablefmt=table_format))
+                             tablefmt=table_format.value))
 
             def print_quiet(data):
                 ids = [str(x.get('id')) for x in data]
@@ -36,7 +47,7 @@ def format_result(table_columns=None, single=False, show_table_headers=True, tab
             if kwargs.get('quiet', False):
                 print_res = print_quiet
             else:
-                print_res = print_json if kwargs.get('output') == 'json' else print_table
+                print_res = print_json if kwargs.get('output') == OutputType.JSON.value else print_table
 
             print_res(res)
 

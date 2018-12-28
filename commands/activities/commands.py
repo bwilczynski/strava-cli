@@ -1,10 +1,9 @@
 import click
 from dateparser import parse
 
-import api.activity
-from api import athlete
+import api
 from decorators import output_option, login_required
-from .formatters import format_activities_result, format_activity_result
+from .formatters import format_activities, format_activity
 
 
 @click.command('activities')
@@ -22,8 +21,8 @@ def get_activities(output, quiet, page=None, per_page=None, before=None, after=N
     if after:
         ga_kwargs['after'] = parse(after).timestamp()
 
-    result = athlete.get_activities(page=page, per_page=per_page, **ga_kwargs)
-    format_activities_result(result, output=output, quiet=quiet)
+    result = api.get_activities(page=page, per_page=per_page, **ga_kwargs)
+    format_activities(result, output=output, quiet=quiet)
 
 
 @click.command('activity')
@@ -34,5 +33,5 @@ def get_activity(output, activity_ids=None):
     for i, activity_id in enumerate(activity_ids):
         if i > 0:
             click.echo()
-        result = api.activity.get_activity(activity_id)
-        format_activity_result(result, output=output)
+        result = api.get_activity(activity_id)
+        format_activity(result, output=output)

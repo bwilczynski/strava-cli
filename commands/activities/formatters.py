@@ -1,6 +1,6 @@
 import click
 
-from decorators import format_result
+from decorators import format_result, OutputType, TableFormat
 from emoji import UP_ARROW, DOWN_ARROW, RIGHT_ARROW, RED_HEART, RUNNING_SHOE
 from formatters import format_activity_type, format_distance, format_elevation, format_heartrate, format_speed, \
     humanize, format_date, format_seconds, noop_formatter
@@ -24,17 +24,19 @@ SUMMARY_ACTIVITY_COLUMNS = [
     'average_speed'
 ]
 
+ACTIVITY_COLUMNS = ['key', 'value']
+
 
 @format_result(table_columns=SUMMARY_ACTIVITY_COLUMNS)
-def format_activities_result(result, output=None, quiet=None):
-    return result if (quiet or output == 'json') else [
+def format_activities(result, output=None, quiet=None):
+    return result if (quiet or output == OutputType.JSON.value) else [
         _format_summary_activity(activity) for
         activity in result]
 
 
-@format_result(table_columns=['key', 'value'], show_table_headers=False, table_format='plain')
-def format_activity_result(result, output):
-    return result if output == 'json' else _format_activity(result)
+@format_result(table_columns=ACTIVITY_COLUMNS, show_table_headers=False, table_format=TableFormat.PLAIN)
+def format_activity(result, output):
+    return result if output == OutputType.JSON.value else _format_activity(result)
 
 
 def _format_activity_name(name, activity):

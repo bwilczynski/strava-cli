@@ -1,7 +1,31 @@
+from decorators import OutputType, format_result
 from formatters import format_distance, format_seconds, format_elevation, format_activity_type
 
+STATS_COLUMNS = [
+    'type',
+    'count',
+    'distance',
+    'moving_time',
+    'elevation_gain'
+]
 
-def format_stats(stats):
+PROFILE_COLUMNS = [
+    'key',
+    'value'
+]
+
+
+@format_result(table_columns=STATS_COLUMNS)
+def format_stats(result, output=None):
+    return result if output == OutputType.JSON.value else _format_stats(result)
+
+
+@format_result(table_columns=PROFILE_COLUMNS)
+def format_athlete(result, output=None):
+    return result if output == OutputType.JSON.value else _format_athlete(result)
+
+
+def _format_stats(stats):
     formatters = {
         'count': lambda x: x,
         'distance': format_distance,
@@ -24,7 +48,7 @@ def format_stats(stats):
     ]
 
 
-def format_athlete(athlete):
+def _format_athlete(athlete):
     def format_name():
         return f'{athlete.get("firstname")} {athlete.get("lastname")}'
 
