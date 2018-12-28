@@ -4,7 +4,7 @@ Uses [Strava API](https://developers.strava.com/docs/reference/) to access Strav
 
 ## Usage
 
-```bash
+```sh
 strava [OPTIONS] COMMAND [ARGS]
 ```
 
@@ -12,20 +12,20 @@ strava [OPTIONS] COMMAND [ARGS]
 
 [Create application](https://www.strava.com/settings/api) and set the following environment variables before running `strava`:
 
-```bash
+```sh
 export STRAVA_CLIENT_ID={YOUR_CLIENT_ID}
 export STRAVA_CLIENT_SECRET={YOUR_CLIENT_SECRET}
 ```
 
 Login to your Strava service (opens a web browser sending user to Strava login service):
 
-```bash
+```sh
 strava login
 ```
 
 For usage and help content, pass in the `--help` parameter, for example:
 
-```bash
+```sh
 strava --help
 ```
 
@@ -33,7 +33,7 @@ strava --help
 
 Get recent, yearly, total stats:
 
-```
+```console
 ➜ strava stats  
 
 Type        Count  Distance    Moving time    Elevation gain
@@ -46,7 +46,7 @@ Type        Count  Distance    Moving time    Elevation gain
 
 Get last 5 activities:
 
-```
+```console
 ➜ strava activities -pp 5
 
         Id  Start date                 Name             Elapsed time    Distance    Average speed
@@ -60,17 +60,17 @@ Get last 5 activities:
 
 Get activities after / before a certain date:
 
-```bash
+```sh
 strava activities --after="2 weeks ago" --before="1 week ago"
 ```
 
-```bash
+```sh
 strava activities --after="2018-12-01"
 ```
 
 Get detailed activity information:
 
-```
+```console
 ➜ strava activity 1958241710
 
 Name:                  🏃 30. Bieg Niepodległości
@@ -98,6 +98,6 @@ Split 11:              👟 04:44 /km ❤ 173 bpm ⬇ -1 m
 ```
 Or use `xargs`:
 
-```bash
+```sh
 strava activities -q --after="1 day ago" | xargs strava activity 
 ```
