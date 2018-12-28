@@ -35,4 +35,4 @@ def get_activity(output, activity_ids=None):
         if i > 0:
             click.echo()
         result = api.activity.get_activity(activity_id)
-        format_activity_result(result, output)
+        format_activity_result(result, output=output)
