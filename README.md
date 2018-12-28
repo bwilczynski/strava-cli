@@ -33,7 +33,7 @@ $ strava --help
 
 Get recent, yearly, total stats:
 
-```bash
+```
 ➜ strava stats  
 
 Type        Count  Distance    Moving time    Elevation gain
@@ -46,8 +46,9 @@ Type        Count  Distance    Moving time    Elevation gain
 
 Get last 5 activities:
 
-```bash
+```
 ➜ strava activities -PP 5  
+
   Index  Start date                 Name             Elapsed time    Distance    Average speed
 -------  -------------------------  ---------------  --------------  ----------  ---------------
       1  2018-12-27 17:58:49+01:00  🏃 Afternoon Run  45:19           8.02 km     05:15 /km
@@ -59,8 +60,9 @@ Get last 5 activities:
 
 Get detailed activity information:
 
-```bash
+```
 ➜ strava activity -I 14
+
 Name:                  🏃 30. Bieg Niepodległości
 Description:           Oficjalny czas: 46:55
 Start date:            2018-11-11 11:24:28+01:00
