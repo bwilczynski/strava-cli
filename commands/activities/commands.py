@@ -2,40 +2,35 @@ import click
 
 import api.activity
 from api import athlete
-from commands.activities.formatters import format_summary_activity, format_activity
-from decorators import output_option, login_required, format_result
-
-SUMMARY_ACTIVITY_COLUMNS = [
-    'index',
-    'start_date',
-    'name',
-    'elapsed_time',
-    'distance',
-    'average_speed'
-]
+from decorators import output_option, login_required
+from .formatters import format_activities_result, format_activity_result
 
 
 @click.command('activities')
-@click.option('--page', '-P', default=1, type=int)
-@click.option('--per_page', '-PP', default=30, type=int)
+@click.option('--page', '-p', default=1, type=int)
+@click.option('--per_page', '-pp', default=30, type=int)
+@click.option('--quiet', '-q', is_flag=True, default=False)
 @output_option()
 @login_required
-@format_result(table_columns=SUMMARY_ACTIVITY_COLUMNS)
-def get_activities(output, page=1, per_page=30):
+def get_activities(output, quiet, page=1, per_page=30):
     result = athlete.get_activities(page, per_page)
-    return result if output == 'json' else [format_summary_activity(index + (page - 1) * per_page + 1, activity) for
-                                            index, activity in
-                                            enumerate(result)]
+    index_offset = (page - 1) * per_page + 1
+    format_activities_result(result, index_offset, output=output, quiet=quiet)
 
 
 @click.command('activity')
-@click.option('--index', '-I', default=1, type=int)
+@click.option('--index', '-i', default=1, type=int)
+@click.argument('activity_ids', required=False, nargs=-1)
 @output_option()
 @login_required
-@format_result(table_columns=['key', 'value'], show_table_headers=False, table_format='plain')
-def get_activity(index, output):
-    activities = athlete.get_activities(index, 1)
-    activity = activities[-1]
-    activity_id = activity.get('id')
-    result = api.activity.get_activity(activity_id)
-    return result if output == 'json' else format_activity(result)
+def get_activity(index, output, activity_ids):
+    if activity_ids is None:
+        activities = athlete.get_activities(index, 1)
+        activity = activities[-1]
+        activity_ids = [activity.get('id')]
+
+    for i, activity_id in enumerate(activity_ids):
+        if i > 0:
+            click.echo()
+        result = api.activity.get_activity(activity_id)
+        format_activity_result(result, output)

@@ -1,5 +1,6 @@
 import functools
 import json
+import os
 
 import click
 from click import option
@@ -25,9 +26,19 @@ def format_result(table_columns=None, single=False, show_table_headers=True, tab
                              headers=[humanize(header) for header in table_columns] if show_table_headers else [],
                              tablefmt=table_format))
 
-            output = kwargs.get('output', 'table')
+            def print_quiet(data):
+                ids = [str(x.get('id')) for x in data]
+                click.echo(os.linesep.join(ids))
+                pass
+
             res = func(*args, **kwargs)
-            print_json(res) if output == 'json' else print_table(res)
+
+            if kwargs.get('quiet', False):
+                print_res = print_quiet
+            else:
+                print_res = print_json if kwargs.get('output') == 'json' else print_table
+
+            print_res(res)
 
         return wrapper_format_result
 
