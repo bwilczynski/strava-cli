@@ -1,18 +1,18 @@
 from decorators import OutputType, format_result
 from formatters import format_distance, format_seconds, format_elevation, format_activity_type
 
-STATS_COLUMNS = [
+STATS_COLUMNS = (
     'type',
     'count',
     'distance',
     'moving_time',
     'elevation_gain'
-]
+)
 
-PROFILE_COLUMNS = [
+PROFILE_COLUMNS = (
     'key',
     'value'
-]
+)
 
 
 @format_result(table_columns=STATS_COLUMNS)

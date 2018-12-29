@@ -10,21 +10,21 @@ N_A = 'N/A'
 SUMMARY_ACTIVITY_FORMATTERS = {
     'id': noop_formatter,
     'start_date': format_date,
-    'elapsed_time': format_seconds,
+    'moving_time': format_seconds,
     'distance': format_distance,
     'average_speed': format_speed
 }
 
-SUMMARY_ACTIVITY_COLUMNS = [
+SUMMARY_ACTIVITY_COLUMNS = (
     'id',
     'start_date',
     'name',
-    'elapsed_time',
+    'moving_time',
     'distance',
     'average_speed'
-]
+)
 
-ACTIVITY_COLUMNS = ['key', 'value']
+ACTIVITY_COLUMNS = ('key', 'value')
 
 
 @format_result(table_columns=SUMMARY_ACTIVITY_COLUMNS)

@@ -13,8 +13,9 @@ from .formatters import format_activities, format_activity
 @click.option('--per_page', '-pp', default=30, type=int)
 @click.option('--before', '-B')
 @click.option('--after', '-A')
+@click.option('--index', '-I', type=int)
 @login_required
-def get_activities(output, quiet, page=None, per_page=None, before=None, after=None):
+def get_activities(output, quiet, page=None, per_page=None, before=None, after=None, index=None):
     ga_kwargs = dict()
     if before:
         ga_kwargs['before'] = parse(before).timestamp()
@@ -22,6 +23,8 @@ def get_activities(output, quiet, page=None, per_page=None, before=None, after=N
         ga_kwargs['after'] = parse(after).timestamp()
 
     result = api.get_activities(page=page, per_page=per_page, **ga_kwargs)
+    if index is not None:
+        result = result[index:index + 1]
     format_activities(result, output=output, quiet=quiet)
 
 

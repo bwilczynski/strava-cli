@@ -34,7 +34,7 @@ def format_result(table_columns=None, single=False, show_table_headers=True, tab
                 rows = [[row[header] for header in table_columns] for row in table_data]
                 click.echo(
                     tabulate(rows,
-                             headers=[humanize(header) for header in table_columns] if show_table_headers else [],
+                             headers=(humanize(header) for header in table_columns) if show_table_headers else (),
                              tablefmt=table_format.value))
 
             def print_quiet(data):
