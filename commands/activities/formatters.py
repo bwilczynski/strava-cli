@@ -64,17 +64,23 @@ def _format_activity(activity):
     def format_gear(gear):
         return f'{gear.get("name")} ({format_distance(gear.get("distance", 0))})'
 
-    def format_elevation_difference(elevation_difference):
-        difference = round(elevation_difference)
+    def format_heartrate_with_emoji(heartrate):
+        return f"{click.style(RED_HEART, fg='red')} {format_heartrate(heartrate)}"
+
+    def format_speed_with_emoji(speed):
+        return f"{click.style(RUNNING_SHOE, fg='yellow')} {format_speed(speed)}"
+
+    def format_elevation_with_emoji(elevation):
+        difference = round(elevation)
         arrow = UP_ARROW if difference > 0 else DOWN_ARROW if difference < 0 else RIGHT_ARROW
-        return f"{arrow} {format_elevation(elevation_difference)}"
+        return f"{arrow} {format_elevation(abs(elevation))}"
 
     def format_split(split):
-        average_heartrate = f"{click.style(RED_HEART, fg='red')} {format_heartrate(split['average_heartrate'])}" \
+        average_heartrate = format_heartrate_with_emoji(split['average_heartrate']) \
             if 'average_heartrate' in split else ''
-        average_speed = f"{click.style(RUNNING_SHOE, fg='yellow')} {format_speed(split['average_speed'])}" \
+        average_speed = format_speed_with_emoji(split['average_speed']) \
             if 'average_speed' in split else ''
-        elevation_difference = format_elevation_difference(split['elevation_difference']) \
+        elevation_difference = format_elevation_with_emoji(split['elevation_difference']) \
             if 'elevation_difference' in split else ''
         return f'{average_speed} {average_heartrate} {elevation_difference}'
 
@@ -85,11 +91,15 @@ def _format_activity(activity):
         'name': format_name,
         'description': noop_formatter,
         **SUMMARY_ACTIVITY_FORMATTERS,
+        'max_speed': format_speed,
+        'average_heartrate': format_heartrate,
+        'max_heartrate': format_heartrate,
         'total_elevation_gain': format_elevation,
         'calories': noop_formatter,
         'device_name': noop_formatter,
-        'gear': format_gear,
+        'gear': format_gear
     }
+
     basic_data = [
         {'key': format_property(k), 'value': v} for k, v in _apply_formatters(activity, formatters).items()
     ]
