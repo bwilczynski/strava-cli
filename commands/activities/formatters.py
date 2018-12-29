@@ -1,3 +1,5 @@
+import os
+
 import click
 
 from decorators import format_result, OutputType, TableFormat
@@ -59,7 +61,10 @@ def _format_summary_activity(activity):
 
 def _format_activity(activity):
     def format_name(name):
-        return _format_activity_name(name, activity)
+        activity_name = _format_activity_name(name, activity)
+        activity_description = activity.get('description')
+        return f"{activity_name}{os.linesep}{activity_description}" if activity_description is not None \
+            else activity_name
 
     def format_gear(gear):
         return f'{gear.get("name")} ({format_distance(gear.get("distance", 0))})'
@@ -89,7 +94,6 @@ def _format_activity(activity):
 
     formatters = {
         'name': format_name,
-        'description': noop_formatter,
         **SUMMARY_ACTIVITY_FORMATTERS,
         'max_speed': format_speed,
         'average_heartrate': format_heartrate,
