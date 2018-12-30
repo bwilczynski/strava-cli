@@ -15,7 +15,7 @@ _ACTIVITY_COLUMNS = ('key', 'value')
 @click.argument('activity_ids', required=True, nargs=-1)
 @output_option()
 @login_required
-def get_activity(output, activity_ids=None):
+def get_activity(output, activity_ids):
     for i, activity_id in enumerate(activity_ids):
         if i > 0:
             click.echo()

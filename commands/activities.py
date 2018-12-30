@@ -33,7 +33,8 @@ _SUMMARY_ACTIVITY_FORMATTERS = {
 @click.option('--after', '-A')
 @click.option('--index', '-I', type=int)
 @login_required
-def get_activities(output, quiet, page=None, per_page=None, before=None, after=None, index=None):
+@format_result(table_columns=_SUMMARY_ACTIVITY_COLUMNS)
+def get_activities(output, quiet, page, per_page, before, after, index):
     ga_kwargs = dict()
     if before:
         ga_kwargs['before'] = parse(before).timestamp()
@@ -43,11 +44,6 @@ def get_activities(output, quiet, page=None, per_page=None, before=None, after=N
     result = api.get_activities(page=page, per_page=per_page, **ga_kwargs)
     if index is not None:
         result = result[index:index + 1]
-    _format_activities(result, output=output, quiet=quiet)
-
-
-@format_result(table_columns=_SUMMARY_ACTIVITY_COLUMNS)
-def _format_activities(result, output=None, quiet=None):
     return result if (quiet or output == OutputType.JSON.value) else _as_table(result)
 
 
