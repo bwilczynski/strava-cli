@@ -1,4 +1,4 @@
-from api._api import client, url, json
+from ._helpers import client, url, json
 
 
 def get_activity(activity_id):

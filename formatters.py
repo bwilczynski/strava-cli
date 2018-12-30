@@ -1,16 +1,20 @@
+import math
 import re
 from datetime import datetime, timezone
-from math import floor
 
-from emoji import PERSON_RUNNING, PERSON_BIKING, PERSON_SWIMMING, PERSON_LIFTING_WEIGHTS
+import click
+
+import emoji
+
+N_A = 'N/A'
 
 
 def format_seconds(seconds):
     if seconds > 3600:
-        mins = floor(seconds / 60)
-        return f'{floor(mins / 60):.0f}h {mins % 60:.0f}m'
+        mins = math.floor(seconds / 60)
+        return f'{math.floor(mins / 60):.0f}h {mins % 60:.0f}m'
     else:
-        return f'{floor(seconds / 60):02.0f}:{seconds % 60:02.0f}'
+        return f'{math.floor(seconds / 60):02.0f}:{seconds % 60:02.0f}'
 
 
 def format_date(date):
@@ -19,7 +23,7 @@ def format_date(date):
 
 
 def format_distance(distance):
-    distance_km = floor(distance / 10) / 100
+    distance_km = math.floor(distance / 10) / 100
     return f'{distance_km:.2f} km'
 
 
@@ -33,10 +37,10 @@ def format_heartrate(heartrate):
 
 def format_activity_type(activity_type):
     type_emojis = {
-        'run': PERSON_RUNNING,
-        'ride': PERSON_BIKING,
-        'swim': PERSON_SWIMMING,
-        'workout': PERSON_LIFTING_WEIGHTS
+        'run': emoji.PERSON_RUNNING,
+        'ride': emoji.PERSON_BIKING,
+        'swim': emoji.PERSON_SWIMMING,
+        'workout': emoji.PERSON_LIFTING_WEIGHTS
     }
     return type_emojis.get(activity_type.lower(), '')
 
@@ -54,3 +58,13 @@ def humanize(word):
 
 def noop_formatter(value):
     return value
+
+
+def format_activity_name(name, activity):
+    activity_type = format_activity_type(activity.get('type'))
+    is_race = activity.get('workout_type', 0) == 1
+    return f'{activity_type} {click.style(name, bold=is_race)}'
+
+
+def apply_formatters(activity, formatters):
+    return {k: formatter(activity[k]) if k in activity else N_A for k, formatter in formatters.items()}
