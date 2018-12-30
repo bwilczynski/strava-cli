@@ -1,9 +1,8 @@
-from ._api import url, json, client
+from ._helpers import url, json, client
 
 
 def get_activities(**kwargs):
-    response = client.get(url('/athlete/activities'),
-                          params=kwargs)
+    response = client.get(url('/athlete/activities'), params=kwargs)
     return json(response)
 
 

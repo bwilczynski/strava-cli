@@ -1,7 +1,10 @@
-from decorators import OutputType, format_result
+import click
+
+import api
+from decorators import output_option, login_required, format_result, OutputType
 from formatters import format_distance, format_seconds, format_elevation, format_activity_type
 
-STATS_COLUMNS = (
+_STATS_COLUMNS = (
     'type',
     'count',
     'distance',
@@ -9,23 +12,19 @@ STATS_COLUMNS = (
     'elevation_gain'
 )
 
-PROFILE_COLUMNS = (
-    'key',
-    'value'
-)
+
+@click.command('stats')
+@output_option()
+@login_required
+@format_result(table_columns=_STATS_COLUMNS)
+def get_stats(output):
+    athlete = api.get_athlete()
+    athlete_id = athlete.get('id')
+    result = api.get_stats(athlete_id)
+    return result if output == OutputType.JSON.value else _as_table(result)
 
 
-@format_result(table_columns=STATS_COLUMNS)
-def format_stats(result, output=None):
-    return result if output == OutputType.JSON.value else _format_stats(result)
-
-
-@format_result(table_columns=PROFILE_COLUMNS)
-def format_athlete(result, output=None):
-    return result if output == OutputType.JSON.value else _format_athlete(result)
-
-
-def _format_stats(stats):
+def _as_table(stats):
     formatters = {
         'count': lambda x: x,
         'distance': format_distance,
@@ -46,17 +45,3 @@ def _format_stats(stats):
              **dict(type=f'{format_activity_type(activity_type)} {total_type}'))
         for activity_type, total_type in activity_totals
     ]
-
-
-def _format_athlete(athlete):
-    def format_name():
-        return f'{athlete.get("firstname")} {athlete.get("lastname")}'
-
-    formatted_athlete = {
-        'id': athlete.get('id'),
-        'username': athlete.get('username'),
-        'name': format_name(),
-        'email': athlete.get('email')
-    }
-
-    return [{'key': k, 'value': v} for k, v in formatted_athlete.items()]

@@ -1,13 +1,13 @@
+import os
 import webbrowser
 from http import HTTPStatus
 from http.server import HTTPServer, BaseHTTPRequestHandler
-from os import path
-from urllib.parse import parse_qs
+from urllib import parse
 
 import click
 
-from api import auth
-from config.creds_store import save_access_token
+import api
+from config import creds_store
 from settings import CLIENT_REDIRECT_PORT_NO
 
 
@@ -16,7 +16,7 @@ class AuthenticationError(Exception):
 
 
 def _get_access_token(code):
-    return auth.get_access_token(code)
+    return api.get_access_token(code)
 
 
 def _get_authorization_code(state):
@@ -26,13 +26,13 @@ def _get_authorization_code(state):
     class ClientRedirectHandler(BaseHTTPRequestHandler):
         def do_GET(self):
             query_string = self.path.split('?', 1)[-1]
-            self.server.query_params = parse_qs(query_string)
+            self.server.query_params = parse.parse_qs(query_string)
 
             self.send_response(HTTPStatus.OK)
             self.send_header('Content-type', 'text/html')
             self.end_headers()
 
-            html_file = path.join(path.dirname(path.realpath(
+            html_file = os.path.join(os.path.dirname(os.path.realpath(
                 __file__)), 'templates', 'ok.html' if 'code' in query_string else 'fail.html')
             with open(html_file, 'rb') as html_view:
                 self.wfile.write(html_view.read())
@@ -57,12 +57,12 @@ def _get_authorization_code(state):
 
 @click.command()
 def login():
-    url, state = auth.login()
+    url, state = api.login()
     webbrowser.open_new(url)
     try:
         code = _get_authorization_code(state)
         data = _get_access_token(code)
-        save_access_token(data)
+        creds_store.save_access_token(data)
         click.echo('Login successful.')
     except AuthenticationError:
         click.echo('Access was denied!')
