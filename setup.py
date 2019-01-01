@@ -1,6 +1,6 @@
 import setuptools
 
-VERSION = '0.3'
+VERSION = '0.4'
 
 setuptools.setup(
     name='strava-cli',
@@ -8,9 +8,7 @@ setuptools.setup(
     author='Bartlomiej Wilczynski',
     author_email='me@bwilczynski.com',
     url='https://github.com/bwilczynski/strava-cli',
-    packages=[
-        'strava'
-    ],
+    packages=setuptools.find_packages(),
     install_requires=[
         'click',
         'requests',
