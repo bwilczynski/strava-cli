@@ -7,6 +7,7 @@ import click
 from click import option
 from tabulate import tabulate
 
+import settings
 from config import creds_store
 from formatters import humanize
 
@@ -73,3 +74,15 @@ def login_required(func):
         return func(*args, **kwargs)
 
     return wrapper_login_required
+
+
+def config_required(func):
+    @functools.wraps(func)
+    def wrapper_config_required(*args, **kwargs):
+        if settings.STRAVA_CLIENT_ID is None or settings.STRAVA_CLIENT_SECRET is None:
+            click.echo('Not configured. '
+                       'Run `strava config` or set environment variables STRAVA_CLIENT_ID and STRAVA_CLIENT_SECRET.')
+            return None
+        return func(*args, **kwargs)
+
+    return wrapper_config_required

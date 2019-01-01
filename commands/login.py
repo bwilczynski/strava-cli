@@ -8,6 +8,7 @@ import click
 
 import api
 from config import creds_store
+from decorators import config_required
 from settings import CLIENT_REDIRECT_PORT_NO
 
 
@@ -56,6 +57,7 @@ def _get_authorization_code(state):
 
 
 @click.command()
+@config_required
 def login():
     url, state = api.login()
     webbrowser.open_new(url)
