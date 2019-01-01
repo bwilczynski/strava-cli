@@ -7,9 +7,9 @@ import click
 from click import option
 from tabulate import tabulate
 
-import settings
-from config import creds_store
-from formatters import humanize
+from strava import settings
+from strava.config import creds_store
+from strava.formatters import humanize
 
 
 class OutputType(Enum):

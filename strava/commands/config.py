@@ -1,6 +1,6 @@
 import click
 
-from config import config_store
+from strava.config import config_store
 
 
 @click.command('config')

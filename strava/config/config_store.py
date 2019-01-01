@@ -1,4 +1,4 @@
-from config import local_store
+from strava.config import local_store
 
 CONFIG_FILE = 'config.json'
 

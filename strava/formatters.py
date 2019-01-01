@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 import click
 
-import emoji
+from strava import emoji
 
 N_A = 'N/A'
 

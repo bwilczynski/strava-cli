@@ -2,10 +2,10 @@ import os
 
 import click
 
-import api
-import emoji
-from decorators import output_option, login_required, format_result, TableFormat, OutputType
-from formatters import format_distance, format_heartrate, format_speed, format_elevation, humanize, noop_formatter, \
+from strava import api, emoji
+from strava.decorators import output_option, login_required, format_result, TableFormat, OutputType
+from strava.formatters import format_distance, format_heartrate, format_speed, format_elevation, humanize, \
+    noop_formatter, \
     format_date, format_seconds, format_activity_name, apply_formatters
 
 _ACTIVITY_COLUMNS = ('key', 'value')

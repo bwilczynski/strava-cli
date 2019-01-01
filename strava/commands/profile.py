@@ -1,7 +1,7 @@
 import click
 
-import api
-from decorators import output_option, login_required, format_result, OutputType
+from strava import api
+from strava.decorators import output_option, login_required, format_result, OutputType
 
 _PROFILE_COLUMNS = (
     'key',

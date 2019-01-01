@@ -1,8 +1,8 @@
 import click
 
-import api
-from decorators import output_option, login_required, format_result, OutputType
-from formatters import format_distance, format_seconds, format_elevation, format_activity_type
+from strava import api
+from strava.decorators import output_option, login_required, format_result, OutputType
+from strava.formatters import format_distance, format_seconds, format_elevation, format_activity_type
 
 _STATS_COLUMNS = (
     'type',

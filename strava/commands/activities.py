@@ -1,9 +1,9 @@
 import click
 from dateparser import parse
 
-import api
-from decorators import output_option, login_required, format_result, OutputType
-from formatters import noop_formatter, format_date, format_seconds, format_distance, format_speed, \
+from strava import api
+from strava.decorators import output_option, login_required, format_result, OutputType
+from strava.formatters import noop_formatter, format_date, format_seconds, format_distance, format_speed, \
     format_activity_name, apply_formatters
 
 _SUMMARY_ACTIVITY_COLUMNS = (

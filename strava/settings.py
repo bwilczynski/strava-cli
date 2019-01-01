@@ -1,6 +1,6 @@
 import os
 
-from config import config_store
+from strava.config import config_store
 
 cfg = config_store.get_config() or {}
 

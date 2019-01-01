@@ -1,7 +1,7 @@
 from requests_oauthlib import OAuth2Session
 
-from config.creds_store import save_access_token, get_access_token
-from settings import STRAVA_API_BASE_URL, STRAVA_CLIENT_ID, REFRESH_TOKEN_URL, STRAVA_CLIENT_SECRET
+from strava.config.creds_store import save_access_token, get_access_token
+from strava.settings import STRAVA_API_BASE_URL, STRAVA_CLIENT_ID, REFRESH_TOKEN_URL, STRAVA_CLIENT_SECRET
 
 
 def url(path):

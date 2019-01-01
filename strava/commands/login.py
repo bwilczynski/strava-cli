@@ -6,10 +6,10 @@ from urllib import parse
 
 import click
 
-import api
-from config import creds_store
-from decorators import config_required
-from settings import CLIENT_REDIRECT_PORT_NO
+from strava import api
+from strava.config import creds_store
+from strava.decorators import config_required
+from strava.settings import CLIENT_REDIRECT_PORT_NO
 
 
 class AuthenticationError(Exception):

@@ -1,6 +1,6 @@
 import click
 
-from config import creds_store
+from strava.config import creds_store
 
 
 @click.command()

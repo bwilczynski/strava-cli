@@ -1,6 +1,6 @@
 from requests_oauthlib import OAuth2Session
 
-from settings import STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, CLIENT_REDIRECT_URL, AUTH_URL, ACCESS_TOKEN_URL, \
+from strava.settings import STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, CLIENT_REDIRECT_URL, AUTH_URL, ACCESS_TOKEN_URL, \
     CLIENT_SCOPE
 
 client = OAuth2Session(STRAVA_CLIENT_ID, redirect_uri=CLIENT_REDIRECT_URL, scope=CLIENT_SCOPE)

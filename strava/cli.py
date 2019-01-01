@@ -1,6 +1,6 @@
 import click
 
-from commands import login, logout, get_activities, get_activity, get_profile, get_stats, set_config
+from strava.commands import login, logout, get_activities, get_activity, get_profile, get_stats, set_config
 
 
 @click.group()
