@@ -10,7 +10,10 @@ strava [OPTIONS] COMMAND [ARGS]
 
 ### Get Started
 
-[Create application](https://www.strava.com/settings/api) and set the following environment variables before running `strava`:
+[Create application](https://www.strava.com/settings/api) and run `strava config` to provide 
+your application's Client ID and Client Secret.
+
+Alternatively set the following environment variables before running `strava`:
 
 ```sh
 export STRAVA_CLIENT_ID={YOUR_CLIENT_ID}
