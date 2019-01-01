@@ -1,9 +1,19 @@
 import setuptools
 
-VERSION = '0.4'
+VERSION = '0.4.1'
+DESCRIPTION = 'Strava Command-Line Tools'
+
+from os import path
+
+here = path.abspath(path.dirname(__file__))
+with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setuptools.setup(
     name='strava-cli',
+    description=DESCRIPTION,
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     version=VERSION,
     author='Bartlomiej Wilczynski',
     author_email='me@bwilczynski.com',
