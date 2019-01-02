@@ -4,7 +4,14 @@ Uses [Strava API](https://developers.strava.com/docs/reference/) to access Strav
 
 ## Installation
 
-Python 3 required:
+Using `Homebrew` on OSX:
+
+```sh
+brew tap bwilczynski/strava-cli
+brew install strava-cli
+```
+
+Using `pip` (requires Python 3):
 
 ```sh
 pip install strava-cli
