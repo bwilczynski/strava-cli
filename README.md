@@ -2,6 +2,14 @@
 
 Uses [Strava API](https://developers.strava.com/docs/reference/) to access Strava dataset.
 
+## Installation
+
+Python 3 required:
+
+```sh
+pip install strava-cli
+```
+
 ## Usage
 
 ```sh
