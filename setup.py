@@ -10,6 +10,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setuptools.setup(
+    python_requires='>=3.0',
     name='strava-cli',
     description=DESCRIPTION,
     long_description=long_description,
