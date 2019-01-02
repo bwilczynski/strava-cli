@@ -4,6 +4,7 @@ from strava.commands import login, logout, get_activities, get_activity, get_pro
 
 
 @click.group()
+@click.version_option()
 def cli():
     pass
 
