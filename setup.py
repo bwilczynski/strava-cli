@@ -1,6 +1,6 @@
 import setuptools
 
-VERSION = '0.4.3'
+VERSION = '0.4.4'
 DESCRIPTION = 'Strava Command-Line Tools'
 
 from os import path
