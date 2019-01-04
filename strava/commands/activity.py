@@ -81,7 +81,7 @@ def _as_table(activity):
     ]
     split_data = [
         {'key': format_property(f"Split {split.get('split')}"), 'value': format_split(split)} for split in
-        activity.get('splits_metric')
+        activity.get('splits_metric', [])
     ]
 
     return [
