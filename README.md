@@ -7,7 +7,7 @@ Uses [Strava API](https://developers.strava.com/docs/reference/) to access Strav
 Using `Homebrew` on OSX:
 
 ```sh
-brew tap bwilczynski/strava-cli
+brew tap bwilczynski/tap
 brew install strava-cli
 ```
 
