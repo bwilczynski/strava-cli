@@ -2,7 +2,7 @@ import os
 
 import setuptools
 
-VERSION = '0.4.7'
+VERSION = '0.4.8'
 DESCRIPTION = 'Strava Command-Line Tools'
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -31,4 +31,5 @@ setuptools.setup(
         [console_scripts]
         strava=strava.cli:cli
     ''',
+    include_package_data=True,
 )
