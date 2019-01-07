@@ -5,16 +5,13 @@ from urllib import parse
 
 from requests_oauthlib import OAuth2Session
 
-from strava.settings import STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, AUTH_URL, ACCESS_TOKEN_URL, \
-    CLIENT_SCOPE
-
 
 class AuthenticationError(Exception):
     pass
 
 
 class OAuth2AuthorizationCodeFlow(object):
-    def __init__(self):
+    def __init__(self, client_id=None, client_secret=None, scope=None, auth_url=None, token_url=None):
         class ClientRedirectServer(HTTPServer):
             query_params = {}
 
@@ -35,12 +32,18 @@ class OAuth2AuthorizationCodeFlow(object):
             def log_message(self, format, *args):
                 pass
 
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.scope = scope
+        self.auth_url = auth_url
+        self.token_url = token_url
+
         self.server = ClientRedirectServer(('', 0), ClientRedirectHandler)
         redirect_uri = f'http://localhost:{self.server.server_port}'
-        self.client = OAuth2Session(STRAVA_CLIENT_ID, redirect_uri=redirect_uri, scope=CLIENT_SCOPE)
+        self.client = OAuth2Session(self.client_id, redirect_uri=redirect_uri, scope=self.scope)
 
     def authorization_url(self):
-        return self.client.authorization_url(AUTH_URL)
+        return self.client.authorization_url(self.auth_url)
 
     def get_authorization_code(self, state):
         while True:
@@ -57,5 +60,5 @@ class OAuth2AuthorizationCodeFlow(object):
                 raise AuthenticationError()
 
     def get_access_token(self, code):
-        return self.client.fetch_token(ACCESS_TOKEN_URL, code=code, client_id=STRAVA_CLIENT_ID,
-                                       client_secret=STRAVA_CLIENT_SECRET)
+        return self.client.fetch_token(self.token_url, code=code, client_id=self.client_id,
+                                       client_secret=self.client_secret)
