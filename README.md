@@ -1,5 +1,7 @@
 # Strava command-line interface
 
+[![Build Status](https://dev.azure.com/bwilczyn/strava-cli/_apis/build/status/bwilczynski.strava-cli?branchName=master)](https://dev.azure.com/bwilczyn/strava-cli/_build/latest?definitionId=1&branchName=master)
+
 Uses [Strava API](https://developers.strava.com/docs/reference/) to access Strava dataset.
 
 ## Installation
