@@ -1,0 +1,9 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'Ubuntu-16.04'
+
+steps:
+- script: python setup.py sdist bdist_wheel
+  displayName: 'Build'
