@@ -7,6 +7,7 @@ verify_ssl = true
 pylint = "*"
 autopep8 = "*"
 twine = "*"
+v = {editable = true,version = "*"}
 
 [packages]
 strava-cli = {editable = true,path = "."}
