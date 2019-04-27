@@ -16,7 +16,12 @@ steps:
 - script: python setup.py sdist bdist_wheel
   displayName: 'Build'
 
+- task: CopyFiles@2 
+  inputs:   
+    contents: dist/**   
+    targetFolder: $(Build.ArtifactStagingDirectory)
+
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/dist'
-    ArtifactName: 'dist'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: wheel
