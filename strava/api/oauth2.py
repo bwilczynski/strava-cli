@@ -61,4 +61,4 @@ class OAuth2AuthorizationCodeFlow(object):
 
     def get_access_token(self, code):
         return self.client.fetch_token(self.token_url, code=code, client_id=self.client_id,
-                                       client_secret=self.client_secret)
+                                       client_secret=self.client_secret, include_client_id=True)
