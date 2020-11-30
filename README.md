@@ -128,3 +128,18 @@ Combine JSON output with `jq`:
 ➜ strava activities -pp 1 -q | xargs strava activity --output json | jq ".name"
 "Afternoon Run"
 ```
+
+Upload Activity from GPX (example: export from a competing service):
+```sh
+strava upload ./2020-09-27-145141.gpx
+```
+```console
+Id:      4717164254
+Status:  Your activity is still being processed.
+Error:   None
+```
+
+Can upload multiple activities.
+```sh
+strava upload ./*.gpx
+```
