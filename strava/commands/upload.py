@@ -37,13 +37,13 @@ def _format_upload(result, output=None):
 
 def _as_table(upload_result):
     def format_id(upload_id):
-        return "{0}".format(upload_id)
+        return f'{upload_id}'
 
     def format_error(upload_error):
-        return "{0}".format(upload_error)
+        return f'{upload_error}'
 
     def format_status(upload_status):
-        return "{0}".format(upload_status)
+        return f'{upload_status}'
 
     def format_property(name):
                 return click.style(f'{humanize(name)}:', bold=True)
