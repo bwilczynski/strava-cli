@@ -24,9 +24,9 @@ def post_upload(output, upload_files):
             result = None
         else:
             result=None
-            with open(filename, 'rb') as f:
-                xargs.update({'file':f})
-                result = api.post_upload(xargs)
+            #with open(filename, 'rb') as f:
+            #    xargs.update({'files':f})
+            result = api.post_upload(xargs, filename)
         _format_upload(result, output=output)
 
 
@@ -39,24 +39,27 @@ def _as_table(upload_result):
     def format_id(upload_id):
         return "{0}".format(upload_id)
 
+    def format_error(upload_error):
+        return "{0}".format(upload_error)
+
+    def format_status(upload_status):
+        return "{0}".format(upload_status)
+
+    def format_property(name):
+                return click.style(f'{humanize(name)}:', bold=True)
 
     formatters = {
         'id': format_id,
-        'status': noop_formatter,
-        'error': noop_formatter,
+        'status': format_status,
+        'error': format_error,
     }
 
     basic_data = [
-        {'key': format_property(k), 'value': v} for k, v in apply_formatters(activity, formatters).items()
-    ]
-    split_data = [
-        {'key': format_property(f"Split {split.get('split')}"), 'value': format_split(split)} for split in
-        activity.get('splits_metric', [])
+        {'key': format_property(k), 'value': v} for k, v in apply_formatters(upload_result, formatters).items()
     ]
 
     return [
-        *basic_data,
-        *split_data
+        *basic_data
     ]
 
 def _process_file(filename):
@@ -69,15 +72,37 @@ def _process_file(filename):
         # not an XML file - there might be junk in the directory
         return None
     params={}
-    typere=re.search(r'\}([a-z.]{3,6})$', root.tag)
+    typere=re.search(r'\}([a-z.]{3,6})$', activity_root.tag)
     if typere:
         params.update({'data_type': typere.group(1)})
     try:
-        if re.search(r'\}name$', root[0][0].tag):
-            params.update({'name': root[0][0].text})
+        if re.search(r'\}name$', activity_root[0][0].tag):
+            params.update({'name': activity_root[0][0].text})
+            activity_match=re.search(r'(?i)^([a-z]*)\s', activity_root[0][0].text)
+            if activity_match:
+                activitytype=str(activity_match.group(1)).strip().lower()
+                if activitytype=="skating":
+                    activitytype="inlineskate"
+                if activitytype=="downhill":
+                    activitytype="alpineski"
+                if activitytype=="hiking":
+                    activitytype="hike"
+                if activitytype=="running":
+                    activitytype="run"
+                if activitytype=="cycling":
+                    activitytype="ride"
+                if activitytype=="walking":
+                    activitytype="walk"
+                if activitytype=="swimming":
+                    activitytype="swim"
+                if activitytype=="sport":
+                    activitytype="workout"
+                params.update({"activity_type": activitytype})
+
     except IndexError:
         # This tag doesn't exist, it's not RunKeeper format GPX
         # so some other format defines the definition. TODO
+        # So we'll try to upload it without any values
         ...
     return params
 
