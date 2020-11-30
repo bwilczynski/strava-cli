@@ -18,6 +18,15 @@ def post_upload(output, upload_files):
     for i, filename in enumerate(upload_files):
         if i > 0:
             click.echo()
+        if i % 90 == 0 and i > 5:
+            import time
+            click.echo(f'Sleeping for API rate limiting, uploaded {i} items.')
+            time.sleep(900)
+            # Can only perform 100 API requests every 15 minutes
+            # so we'll do 90 then sleep, to allow for reads that may happen in other threads
+            # http://developers.strava.com/docs/#rate-limiting
+            # the api/upload/py post_upload() code *should* catch this, sleep, and retry itself
+            # but the included requests module isn't returning the error code to trap the 429.
         xargs = _process_file(filename)
         if xargs is None:
             # file isn't XML, have to bail
