@@ -16,6 +16,7 @@ cli.add_command(get_activity)
 cli.add_command(get_profile)
 cli.add_command(get_stats)
 cli.add_command(set_config)
+cli.add_command(upload)
 
 if __name__ == '__main__':
     cli()
