@@ -10,7 +10,7 @@ STRAVA_CLIENT_SECRET = os.getenv('STRAVA_CLIENT_SECRET') or cfg.get('client_secr
 STRAVA_AUTH_API_BASE_URL = 'https://www.strava.com/oauth'
 STRAVA_API_BASE_URL = 'https://www.strava.com/api/v3'
 
-CLIENT_SCOPE = ['activity:read_all,activity:write']
+CLIENT_SCOPE = ['activity:read_all,activity:write,profile:read_all']
 AUTH_URL = f'{STRAVA_AUTH_API_BASE_URL}/authorize'
 TOKEN_URL = f'{STRAVA_AUTH_API_BASE_URL}/token'
 REFRESH_TOKEN_URL = TOKEN_URL

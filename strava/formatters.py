@@ -4,8 +4,6 @@ from datetime import datetime, timezone
 
 import click
 
-from strava import emoji
-
 N_A = 'N/A'
 
 
@@ -24,7 +22,7 @@ def format_date(date):
 
 def format_distance(distance):
     distance_km = math.floor(distance / 10) / 100
-    return f'{distance_km:.2f} km'
+    return f'{distance_km:.2f} km' if distance_km > 0 else ''
 
 
 def format_speed(speed):
@@ -36,13 +34,7 @@ def format_heartrate(heartrate):
 
 
 def format_activity_type(activity_type):
-    type_emojis = {
-        'run': emoji.PERSON_RUNNING,
-        'ride': emoji.PERSON_BIKING,
-        'swim': emoji.PERSON_SWIMMING,
-        'workout': emoji.PERSON_LIFTING_WEIGHTS
-    }
-    return type_emojis.get(activity_type.lower(), '')
+    return activity_type
 
 
 def format_elevation(elevation):
@@ -61,9 +53,8 @@ def noop_formatter(value):
 
 
 def format_activity_name(name, activity):
-    activity_type = format_activity_type(activity.get('type'))
     is_race = activity.get('workout_type', 0) == 1
-    return f'{activity_type} {click.style(name, bold=is_race)}'
+    return f'{click.style(name, bold=is_race)}'
 
 
 def apply_formatters(activity, formatters):
