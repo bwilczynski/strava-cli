@@ -14,3 +14,8 @@ def get_athlete():
 def get_stats(athlete_id):
     response = client.get(url(f'/athletes/{athlete_id}/stats'))
     return json(response)
+
+
+def get_zones():
+    response = client.get(url(f'/athlete/zones'))
+    return json(response)
