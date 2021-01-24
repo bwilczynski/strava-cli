@@ -6,7 +6,8 @@ from strava.utils.streams_run import run_detail
 from strava import api
 from strava.decorators import format_result, TableFormat, OutputType
 from strava.formatters import format_property, apply_formatters, noop_formatter, format_seconds, \
-    format_gear, format_date, format_distance, format_heartrate, format_elevation, humanize, update_activity_name
+    format_gear, format_date, format_distance, format_heartrate, format_elevation, humanize, update_activity_name, \
+    id_url_formatter
 
 _ACTIVITY_TOTAL_INIT = {'number_of_activities': 0, 'total_time': 0, 'total_tss': 0}
 _ACTIVITY_TOTAL_FORMATTERS = {
@@ -17,6 +18,7 @@ _ACTIVITY_TOTAL_FORMATTERS = {
 _ACTIVITY_COLUMNS = ('key', 'value')
 _ACTIVITY_TITLE_FORMATTERS = {
     'name': humanize,
+    'id': id_url_formatter,
 }
 _ACTIVITY_DEFAULT_FORMATTERS = {
     'gear': format_gear,

@@ -55,6 +55,11 @@ def noop_formatter(value):
     return value
 
 
+def id_url_formatter(value):
+    default_act_url = 'https://www.strava.com/activities/'
+    return f'{value} ({default_act_url}{value})'
+
+
 def format_activity_name(name, activity):
     is_race = activity.get('workout_type', 0) == 1
     return f'{click.style(name, bold=is_race)}'
@@ -64,12 +69,6 @@ def update_activity_name(activity):
     name = activity.get('name')
     description = activity.get('description')
     return f"{name}{os.linesep}{description}" if description is not None else name
-
-#def format_name(name, activity):
-#    activity_name = format_activity_name(name, activity)
-#    activity_description = activity.get('description')
-#    return f"{activity_name}{os.linesep}{activity_description}" if activity_description is not None \
-#        else activity_name
 
 
 def format_gear(gear):
