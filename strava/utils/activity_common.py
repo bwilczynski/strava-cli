@@ -17,7 +17,7 @@ _ACTIVITY_TOTAL_FORMATTERS = {
 }
 _ACTIVITY_COLUMNS = ('key', 'value')
 _ACTIVITY_TITLE_FORMATTERS = {
-    'name': humanize,
+    'name': noop_formatter,
     'id': id_url_formatter,
 }
 _ACTIVITY_DEFAULT_FORMATTERS = {

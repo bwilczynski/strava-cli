@@ -1,40 +1,16 @@
-To install
-
-```
-python setup.py build & python setup.py install
-```
-
-TODO:
-- readme
-- fatigue
-- laps command
-- Activitiy week ordering
----
 # Strava command-line interface
 
-[![Build Status](https://dev.azure.com/bwilczyn/strava-cli/_apis/build/status/bwilczynski.strava-cli?branchName=master)](https://dev.azure.com/bwilczyn/strava-cli/_build/latest?definitionId=1&branchName=master)
-
-Uses [Strava API](https://developers.strava.com/docs/reference/) to access Strava dataset.
+This repo is a fork of [strava-cli](https://github.com/bwilczynski/strava-cli). 
+All kudos to [bwilczynski](https://github.com/bwilczynski) for the great work.
 
 ## Installation
 
-Using `Homebrew` on OSX:
-
-```sh
-brew tap bwilczynski/tap
-brew install strava-cli
-```
-
-Using `pip` (requires Python 3):
-
-```sh
-pip install strava-cli
-```
+To install it do `make install` from the root of the repo. 
 
 ## Usage
 
 ```sh
-strava [OPTIONS] COMMAND [ARGS]
+Usage: strava [OPTIONS] COMMAND [ARGS]...
 ```
 
 ### Get Started
@@ -68,90 +44,188 @@ Get recent, yearly, total stats:
 ```console
 ➜ strava stats  
 
-Type        Count  Distance    Moving time    Elevation gain
---------  -------  ----------  -------------  ----------------
-🏃 recent        7  53.33 km    5h 6m          166 m
-🏃 ytd         121  1048.15 km  95h 43m        4526 m
-🏃 all         241  1761.13 km  164h 35m       7258 m
+Type           Count  Distance     Moving time    Elevation gain
+-----------  -------  -----------  -------------  ----------------
+run recent         0               00:00
+run ytd            0               00:00
+run all          196  2165.29 km   193h 41m       57982 m
+ride recent       15  465.23 km    19h 1m         1520 m
+ride ytd          11  317.48 km    13h 14m        1436 m
+ride all         381  13675.15 km  551h 14m       204692 m
+swim recent        0               00:00
+swim ytd           0               00:00
+swim all           1  2.05 km      43:40
 
 ```
 
-Get last 5 activities:
+List your recent activities:
 
 ```console
-➜ strava activities -pp 5
+➜ strava activities list -pp 5
 
-        Id  Start date                 Name             Elapsed time    Distance    Average speed
-----------  -------------------------  ---------------  --------------  ----------  ---------------
-2038696223  2018-12-27 17:58:49+01:00  🏃 Afternoon Run  45:19           8.02 km     05:15 /km
-2034884699  2018-12-25 15:38:55+01:00  🏃 Bday Run       44:56           7.32 km     05:41 /km
-2031636166  2018-12-23 14:29:50+01:00  🏃 Afternoon Run  48:14           6.55 km     06:17 /km
-2030237887  2018-12-22 20:13:31+01:00  🏃 Evening Run    37:34           7.10 km     05:16 /km
-2020398424  2018-12-16 16:39:56+01:00  🏃 Afternoon Run  41:54           6.31 km     05:43 /km
+        Id  Start date                 Type         Name                                     Moving time    Distance
+----------  -------------------------  -----------  ---------------------------------------  -------------  ----------
+4667970175  2021-01-23 14:33:58+01:00  VirtualRide  Watopia                                  1h 13m         40.02 km
+4663583443  2021-01-22 18:39:40+01:00  Workout      Core and legs                            54:58
+4658375016  2021-01-21 18:48:11+01:00  VirtualRide  Richmond - Easy spin                     38:35          19.13 km
+4650565494  2021-01-20 08:26:48+01:00  Ride         Kind of easy ride                        1h 30m         31.08 km
+4647855447  2021-01-19 18:11:31+01:00  Ride         Oops zwift connection was crazy tonight  1h 2m          23.16 km
 ```
 
-Get activities after / before a certain date:
-
-```sh
-strava activities --after="2 weeks ago" --before="1 week ago"
-```
-
-```sh
-strava activities --after="2018-12-01"
-```
-
-Get detailed activity information:
-
+List your weekly activities or the activities for a specific week:
 ```console
-➜ strava activity 1958241710
+➜ strava activities week --current
 
-Name:                  🏃 30. Bieg Niepodległości
-Description:           Oficjalny czas: 46:55
-Start date:            2018-11-11 11:24:28+01:00
-Elapsed time:          46:58
-Distance:              10.02 km
-Average speed:         04:41 /km
-Total elevation gain:  52 m
-Calories:              639.0
-Device name:           Garmin Forerunner 645 Music
-Gear:                  New Balance Zante v4 (443.65 km)
-Split 1:               👟 04:44 /km ❤ 164 bpm ⬆ 7 m
-Split 2:               👟 04:38 /km ❤ 168 bpm ➡ 0 m
-Split 3:               👟 04:48 /km ❤ 164 bpm ⬆ 1 m
-Split 4:               👟 04:49 /km ❤ 160 bpm ⬇ -3 m
-Split 5:               👟 04:41 /km ❤ 161 bpm ⬇ -2 m
-Split 6:               👟 04:37 /km ❤ 164 bpm ⬆ 2 m
-Split 7:               👟 04:50 /km ❤ 165 bpm ⬆ 3 m
-Split 8:               👟 04:39 /km ❤ 163 bpm ⬇ -1 m
-Split 9:               👟 04:42 /km ❤ 165 bpm ➡ 0 m
-Split 10:              👟 04:24 /km ❤ 171 bpm ⬇ -9 m
-Split 11:              👟 04:44 /km ❤ 173 bpm ⬇ -1 m
-
-```
-Or use `xargs`:
-
-```sh
-strava activities -q --after="1 day ago" | xargs strava activity 
+        Id  Start date                 Type         Name                                     Moving time    Distance
+----------  -------------------------  -----------  ---------------------------------------  -------------  ----------
+4642378106  2021-01-18 17:33:29+01:00  Workout      Core and leg routine                     1h 17m
+4647855447  2021-01-19 18:11:31+01:00  Ride         Oops zwift connection was crazy tonight  1h 2m          23.16 km
+4650565494  2021-01-20 08:26:48+01:00  Ride         Kind of easy ride                        1h 30m         31.08 km
+4658375016  2021-01-21 18:48:11+01:00  VirtualRide  Richmond - Easy spin                     38:35          19.13 km
+4663583443  2021-01-22 18:39:40+01:00  Workout      Core and legs                            54:58
+4667970175  2021-01-23 14:33:58+01:00  VirtualRide  Watopia                                  1h 13m         40.02 km
 ```
 
-Combine JSON output with `jq`:
+You can get more information about specific activities by doing:
+```console 
+➜ strava activity list 4667970175
 
+Name:                  Watopia
+                       20' warm up P Z1
+                       5x 7/3min P Z2/Z4
+                       5' P Z1
+Id:                    4667970175 (https://www.strava.com/activities/4667970175)
+---                    ---
+Gear:                  Canyon (9773.83 km)
+Start date:            2021-01-23 14:33:58+01:00
+Moving time:           1h 13m
+Distance:              40.02 km
+Average heartrate:     147 bpm
+Total elevation gain:  328 m
+---                    ---
+```
+
+And additional details:
+```console 
+➜ strava activity list 4667970175 --details
+
+Name:                  Watopia
+                       20' warm up P Z1
+                       5x 7/3min P Z2/Z4
+                       5' P Z1
+Id:                    4667970175 (https://www.strava.com/activities/4667970175)
+---                    ---
+Gear:                  Canyon (9773.83 km)
+Start date:            2021-01-23 14:33:58+01:00
+Moving time:           1h 13m
+Distance:              40.02 km
+Average heartrate:     147 bpm
+Total elevation gain:  328 m
+---                    ---
+Tss:                   53
+Average power:         197 W
+Normalized power:      218 W
+Intensity factor:      0.66
+Variability index:     1.11
+Efficiency factor:     1.28
+Average cadence:       91 rpm
+Ftp:                   330 W
+---                    ---
+```
+
+Listing all that information for a specific week is possible as well:
 ```console
-➜ strava activities -pp 1 -q | xargs strava activity --output json | jq ".name"
-"Afternoon Run"
+➜ strava activity week --week_number 1 2021
+Name:                  First of the season
+                       Very nice valley
+Id:                    4565601437 (https://www.strava.com/activities/4565601437)
+---                    ---
+Gear:                  N/A
+Start date:            2021-01-04 12:47:18+01:00
+Moving time:           1h 3m
+Distance:              15.83 km
+Average heartrate:     145 bpm
+Total elevation gain:  142 m
+---                    ---
+
+Name:                  From the bottom to top!
+                       Amazing day. Should have bring more food.
+Id:                    4586844829 (https://www.strava.com/activities/4586844829)
+---                    ---
+Gear:                  N/A
+Start date:            2021-01-08 12:20:13+01:00
+Moving time:           2h 34m
+Distance:              41.14 km
+Average heartrate:     129 bpm
+Total elevation gain:  379 m
+---                    ---
 ```
 
-Upload Activity from GPX (example: export from a competing service):
-```sh
-strava upload ./2020-09-27-145141.gpx
-```
+Basic totals can be done from list of detailed activities
 ```console
-Id:      4717164254
-Status:  Your activity is still being processed.
-Error:   None
+➜ strava activity week --week_number 1 2021 -t
+
+Name:                  First of the season
+                       Very nice valley
+Id:                    4565601437 (https://www.strava.com/activities/4565601437)
+---                    ---
+Gear:                  N/A
+Start date:            2021-01-04 12:47:18+01:00
+Moving time:           1h 3m
+Distance:              15.83 km
+Average heartrate:     145 bpm
+Total elevation gain:  142 m
+---                    ---
+
+...
+
+Name:                  From the bottom to top!
+                       Amazing day. Should have bring more food.
+Id:                    4586844829 (https://www.strava.com/activities/4586844829)
+---                    ---
+Gear:                  N/A
+Start date:            2021-01-08 12:20:13+01:00
+Moving time:           2h 34m
+Distance:              41.14 km
+Average heartrate:     129 bpm
+Total elevation gain:  379 m
+---                    ---
+
+Total
+Number of activities:  4
+Total time:            6h 19m
+Total tss:             0
+---                    ---
 ```
 
-Can upload multiple activities.
-```sh
-strava upload ./*.gpx
+For further analysis, you can constrain the computation to specific part of your activity:
+```console
+➜ strava activity constrain 4667970175 --from 0 10 0 --to 0 50 0
+
+Name:                  Watopia
+                       20' warm up P Z1
+                       5x 7/3min P Z2/Z4
+                       5' P Z1
+Id:                    4667970175 (https://www.strava.com/activities/4667970175)
+---                    ---
+Gear:                  Canyon (9773.83 km)
+Start date:            2021-01-23 14:33:58+01:00
+Moving time:           1h 13m
+Distance:              40.02 km
+Average heartrate:     147 bpm
+Total elevation gain:  328 m
+---                    ---
+Tss:                   30
+Average power:         208 W
+Normalized power:      223 W
+Intensity factor:      0.68
+Variability index:     1.07
+Efficiency factor:     1.3
+Average cadence:       92 rpm
+Ftp:                   330 W
+---                    ---
 ```
+
+## Remaining todos:
+- fatigue
+- laps command
