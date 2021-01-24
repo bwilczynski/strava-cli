@@ -24,6 +24,7 @@ from strava.commands.activities_weekly import activities_ga_kwargs
 def get_weekly_activity(output, details, total, current, last, week_number):
     ga_kwargs = activities_ga_kwargs(current, last, week_number)
     activities = api.get_activities(**ga_kwargs)
+    activities.reverse()
     activity_ids = [a.get('id') for a in activities]
 
     return get_activity_from_ids(output, activity_ids, details, total)

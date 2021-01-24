@@ -8,6 +8,7 @@ TODO:
 - readme
 - fatigue
 - laps command
+- Activitiy week ordering
 ---
 # Strava command-line interface
 

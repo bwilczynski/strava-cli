@@ -23,5 +23,6 @@ from strava.utils.activities_common import as_table, SUMMARY_ACTIVITY_COLUMNS
 def get_weekly_activities(output, quiet, current, last, week_number):
     ga_kwargs = activities_ga_kwargs(current, last, week_number)
     result = api.get_activities(**ga_kwargs)
+    result.reverse()
 
     return result if (quiet or output == OutputType.JSON.value) else as_table(result)
