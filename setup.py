@@ -25,7 +25,9 @@ setuptools.setup(
         'requests',
         'requests_oauthlib',
         'tabulate',
-        'dateparser'
+        'dateparser',
+        'pandas',
+        'numpy'
     ],
     entry_points='''
         [console_scripts]

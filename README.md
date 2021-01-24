@@ -8,8 +8,6 @@ TODO:
 - readme
 - fatigue
 - laps command
-- activities total
-- activity with url
 ---
 # Strava command-line interface
 
