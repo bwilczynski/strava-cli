@@ -1,10 +1,11 @@
+import click
 import pandas as pd
 
 from functools import reduce
 
 from strava import api
 from strava.formatters import noop_formatter, format_power, format_cadence
-from strava.utils import to_dataframe, filter_stream_by_from_to, get_athlete_ftp
+from strava.utils import to_dataframe, filter_stream_by_from_to
 from strava.utils.streams_computations import average, compute_hrtss
 from strava.utils.streams_computations import normalized_power, intensity_factor, training_stress_score, variability_index, efficiency_factor
 
@@ -26,6 +27,16 @@ def ride_detail(activity, from_, to):
     else:
         metrics, formatters = _ride_detail_without_power(stream)
     return metrics, formatters
+
+
+def get_athlete_ftp():
+    try:
+        ftp = api.get_athlete().get('ftp')
+        assert isinstance(ftp, int)
+        return ftp
+    except:
+        click.echo(f'The FTP has to be defined in your strava profile.')
+        raise
 
 
 def _ride_detail_without_power(stream):
