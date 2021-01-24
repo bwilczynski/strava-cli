@@ -13,7 +13,9 @@ _STATS_COLUMNS = (
 )
 
 
-@click.command('stats')
+@click.command(name='stats',
+               help='Get some stats about the connected athlete.'
+               )
 @output_option()
 @login_required
 @format_result(table_columns=_STATS_COLUMNS)

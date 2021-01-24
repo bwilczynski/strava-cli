@@ -29,7 +29,7 @@ setuptools.setup(
     ],
     entry_points='''
         [console_scripts]
-        strava=strava.cli:cli
+        strava=strava.cli.cli:cli
     ''',
     include_package_data=True,
 )

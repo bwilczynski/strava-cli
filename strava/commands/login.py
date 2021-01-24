@@ -8,7 +8,9 @@ from strava.decorators import config_required
 from strava.settings import STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, CLIENT_SCOPE, AUTH_URL, TOKEN_URL
 
 
-@click.command()
+@click.command(name='login',
+               help='Login to the strava account.'
+               )
 @config_required
 def login():
     auth_flow = oauth2.OAuth2AuthorizationCodeFlow(client_id=STRAVA_CLIENT_ID, client_secret=STRAVA_CLIENT_SECRET,

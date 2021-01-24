@@ -1,16 +1,15 @@
-import os
-
 import click
 
-from strava import api, emoji
+from strava import api
 from strava.decorators import output_option, login_required, format_result, TableFormat, OutputType
-from strava.formatters import humanize, noop_formatter, \
-    format_date, format_seconds, apply_formatters
+from strava.formatters import humanize, apply_formatters
 
 _ACTIVITY_COLUMNS = ('key', 'value')
 
 
-@click.command('upload')
+@click.command(name='upload',
+               help='Upload local files to strava.'
+               )
 @click.argument('upload_files', required=True, nargs=-1)
 @output_option()
 @login_required
@@ -70,6 +69,7 @@ def _as_table(upload_result):
     return [
         *basic_data
     ]
+
 
 def _process_file(filename):
     import xml.etree.ElementTree as ET

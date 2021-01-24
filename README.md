@@ -1,3 +1,16 @@
+To install
+
+```
+python setup.py build & python setup.py install
+```
+
+TODO:
+- readme
+- fatigue
+- laps command
+- activities total
+- activity with url
+---
 # Strava command-line interface
 
 [![Build Status](https://dev.azure.com/bwilczyn/strava-cli/_apis/build/status/bwilczynski.strava-cli?branchName=master)](https://dev.azure.com/bwilczyn/strava-cli/_build/latest?definitionId=1&branchName=master)

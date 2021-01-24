@@ -3,8 +3,11 @@ import click
 from strava.config import config_store
 
 
-@click.command('config')
-@click.option('--clear', is_flag=True)
+@click.command(name='config',
+               help='Configure and setup your strava account. To be done before login.'
+               )
+@click.option('--clear', is_flag=True,
+              help='Delete the current config.')
 def set_config(clear):
     if clear:
         config_store.delete_config()

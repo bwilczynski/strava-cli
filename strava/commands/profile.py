@@ -9,7 +9,9 @@ _PROFILE_COLUMNS = (
 )
 
 
-@click.command('profile')
+@click.command(name='profile',
+               help='Get the profile of the connected athlete.'
+               )
 @output_option()
 @login_required
 @format_result(table_columns=_PROFILE_COLUMNS)
