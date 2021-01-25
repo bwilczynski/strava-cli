@@ -22,7 +22,7 @@ def ride_detail(activity, from_, to, ftp=None):
     stream = stream.drop_duplicates(subset='time')
     stream = filter_stream_by_from_to(stream, from_, to)
 
-    if activity.get('device_watts'):
+    if activity.get('device_watts') and ftp != 0:
         metrics, formatters = _ride_detail_with_power(stream, ftp)
     else:
         metrics, formatters = _ride_detail_without_power(stream)
