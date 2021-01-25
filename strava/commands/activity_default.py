@@ -12,7 +12,9 @@ from strava.utils import get_activity_from_ids
               help='Get more details about an activity.\n Enable advanced metrics computation.')
 @click.option('--total', '-t', default=False, is_flag=True,
               help='Indicates whenever the total should be computed.\n Only available with multiple ids. Will set --details to True.')
+@click.option('--ftp', type=int,
+              help='Specify an FTP to overwrite strava FTP.')
 @output_option()
 @login_required
-def get_activity(output, activity_ids, details, total):
-    return get_activity_from_ids(output, activity_ids, details, total)
+def get_activity(output, activity_ids, details, total, ftp):
+    return get_activity_from_ids(output, activity_ids, details, total, ftp=ftp)

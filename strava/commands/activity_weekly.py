@@ -19,12 +19,14 @@ from strava.commands.activities_weekly import activities_ga_kwargs
               help='Get the last week activities')
 @click.option('--week_number', '-wn', type=int, nargs=2,
               help='Get the activities for the specified week number.\n Need two arguments (week number, year) like: -wn 2 2021.')
+@click.option('--ftp', type=int,
+              help='Specify an FTP to overwrite strava FTP.')
 @output_option()
 @login_required
-def get_weekly_activity(output, details, total, current, last, week_number):
+def get_weekly_activity(output, details, total, current, last, week_number, ftp):
     ga_kwargs = activities_ga_kwargs(current, last, week_number)
     activities = api.get_activities(**ga_kwargs)
     activities.reverse()
     activity_ids = [a.get('id') for a in activities]
 
-    return get_activity_from_ids(output, activity_ids, details, total)
+    return get_activity_from_ids(output, activity_ids, details, total, ftp=ftp)

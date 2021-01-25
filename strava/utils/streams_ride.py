@@ -10,7 +10,7 @@ from strava.utils.streams_computations import average, compute_hrtss
 from strava.utils.streams_computations import normalized_power, intensity_factor, training_stress_score, variability_index, efficiency_factor
 
 
-def ride_detail(activity, from_, to):
+def ride_detail(activity, from_, to, ftp=None):
     if activity.get('device_watts'):
         sensors = ['time', 'watts', 'cadence', 'heartrate']
     else:
@@ -23,7 +23,7 @@ def ride_detail(activity, from_, to):
     stream = filter_stream_by_from_to(stream, from_, to)
 
     if activity.get('device_watts'):
-        metrics, formatters = _ride_detail_with_power(stream)
+        metrics, formatters = _ride_detail_with_power(stream, ftp)
     else:
         metrics, formatters = _ride_detail_without_power(stream)
     return metrics, formatters
@@ -52,9 +52,10 @@ def _ride_detail_without_power(stream):
     return metrics, formatters
 
 
-def _ride_detail_with_power(stream):
+def _ride_detail_with_power(stream, ftp=None):
     # Gets the FTP.
-    ftp = get_athlete_ftp()
+    if not ftp:
+        ftp = get_athlete_ftp()
 
     # Precomputes metrics.
     np = normalized_power(stream['time'], stream['watts'])

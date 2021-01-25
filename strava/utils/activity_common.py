@@ -30,7 +30,7 @@ _ACTIVITY_DEFAULT_FORMATTERS = {
 }
 
 
-def get_activity_from_ids(output, activity_ids, details=False, total=False, from_=None, to=None):
+def get_activity_from_ids(output, activity_ids, details=False, total=False, from_=None, to=None, ftp=None):
     activity_total = _ACTIVITY_TOTAL_INIT
     for i, activity_id in enumerate(activity_ids):
         if i > 0:
@@ -45,7 +45,7 @@ def get_activity_from_ids(output, activity_ids, details=False, total=False, from
         if details or total:
             act_type = activity.get('type')
             if act_type == 'Ride' or act_type == 'VirtualRide':
-                metrics, met_formatters = ride_detail(activity, from_, to)
+                metrics, met_formatters = ride_detail(activity, from_, to, ftp)
             elif act_type == 'Run':
                 metrics, met_formatters = run_detail(activity, from_, to)
             elif act_type == 'Workout':

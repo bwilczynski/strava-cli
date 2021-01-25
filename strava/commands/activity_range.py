@@ -14,7 +14,9 @@ _ACTIVITY_COLUMNS = ('key', 'value')
               help='Select the start time to narrow the computation to a specific part of the activity.\n If not select the start of the activity is used.\n Need to be entered as 3 numbers, first is the hours, second the minutes ans last the seconds.')
 @click.option('--to', '-t', 'to', nargs=3, type=int, default=None,
               help='Select the end time to narrow the computation to a specific part of the activity.\n If not select the end of the activity is used.\n Need to be entered as 3 numbers, first is the hours, second the minutes ans last the seconds.')
+@click.option('--ftp', type=int,
+              help='Specify an FTP to overwrite strava FTP.')
 @output_option()
 @login_required
-def get_range_activity(output, activity_id, from_, to):
-    return get_activity_from_ids(output, activity_ids=[activity_id], details=True, total=False, from_=from_, to=to)
+def get_range_activity(output, activity_id, from_, to, ftp):
+    return get_activity_from_ids(output, activity_ids=[activity_id], details=True, total=False, from_=from_, to=to, ftp=ftp)
