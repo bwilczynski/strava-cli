@@ -9,11 +9,23 @@ from strava.formatters import format_property, apply_formatters, noop_formatter,
     format_gear, format_date, format_distance, format_heartrate, format_elevation, humanize, update_activity_name, \
     id_url_formatter
 
-_ACTIVITY_TOTAL_INIT = {'number_of_activities': 0, 'total_time': 0, 'total_tss': 0}
+_ACTIVITY_TOTAL_INIT = {
+    'bike #': 0,
+    'run #': 0,
+    'swim #': 0,
+    'strength #': 0,
+    'other #': 0,
+    'total_time': 0,
+    'total_tss': 0,
+}
 _ACTIVITY_TOTAL_FORMATTERS = {
-    'number_of_activities': noop_formatter,
-    'total_time': format_seconds,
     'total_tss': noop_formatter,
+    'total_time': format_seconds,
+    'bike #': noop_formatter,
+    'run #': noop_formatter,
+    'swim #': noop_formatter,
+    'strength #': noop_formatter,
+    'other #': noop_formatter,
 }
 _ACTIVITY_COLUMNS = ('key', 'value')
 _ACTIVITY_TITLE_FORMATTERS = {
@@ -46,12 +58,19 @@ def get_activity_from_ids(output, activity_ids, details=False, total=False, from
             act_type = activity.get('type')
             if act_type == 'Ride' or act_type == 'VirtualRide':
                 metrics, met_formatters = ride_detail(activity, from_, to, ftp)
+                activity_total['bike #'] += 1
             elif act_type == 'Run':
                 metrics, met_formatters = run_detail(activity, from_, to)
+                activity_total['run #'] += 1
             elif act_type == 'Workout':
                 metrics, met_formatters = workout_detail(activity, from_, to)
+                activity_total['strength #'] += 1
+            elif act_type == 'Swim':
+                metrics = {'tss': 0}
+                activity_total['swim #'] += 1
             else:
                 metrics = {'tss': 0}
+                activity_total['other #'] += 1
             # Returns the details.
             activity.update(metrics)
 
@@ -61,7 +80,6 @@ def get_activity_from_ids(output, activity_ids, details=False, total=False, from
         if total:
             activity_total['total_tss'] += activity.get('tss')
             activity_total['total_time'] += activity.get('moving_time')
-            activity_total['number_of_activities'] += 1
 
     # Return the totals.
     if total:

@@ -230,4 +230,3 @@ Ftp:                   330 W
 - fatigue
 - laps command
 - better hrtss (subdivision of zones) and for all activities if heartrate
-- total with activity type
