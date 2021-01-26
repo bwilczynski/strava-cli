@@ -1,5 +1,7 @@
 import datetime
 from math import floor, pow
+
+import click
 from numpy import mean
 
 import pandas as pd
@@ -103,10 +105,19 @@ def compute_hrtss(stream):
     """
     Accordingy to https://www.trainingpeaks.com/blog/estimating-training-stress-score-tss/
     the hrTSS is a way to compute the training stress score based on heart rate.
+
+    The lowest number of zone 5 is the 100% FTHR (according to Joe Friel)
     """
-    hrtss_table = dict({1: 30, 2: 55, 3: 70, 4: 80, 5: 110})
-    #official_table=dict({low1: 20, 1: 30, high1: 40, low2: 50, high2: 60, 3: 70, 4: 80, 5a: 100, 5b: 120, 5c: 140})
-    zones = api.get_zones()
+    hrtss_table = {'1_low': 20, '1_medium': 30, '1_high': 40, '2_low': 50, '2_high': 60, '3': 70, '4': 80, '5a': 100, '5b': 120, '5c': 140}
+
+    # Define the zones
+    try:
+        athlete_zones = api.get_zones().get('heart_rate').get('zones')
+        assert len(athlete_zones) == 5
+        fthr = athlete_zones[4].get('min')
+        zones = _compute_hr_zones(fthr)
+    except:
+        click.echo('5 zones are not set in your strava account, please do that to compute the hrtss.')
 
     # Assign each entry to a zone.
     rep = pd.DataFrame()
@@ -119,6 +130,22 @@ def compute_hrtss(stream):
     return floor(hrtss)
 
 
+def _compute_hr_zones(fthr):
+    zones = {
+        '1_low': {'min': 0, 'max': round(0.40 * fthr)},
+        '1_medium': {'min': round(0.60 * fthr)+1, 'max': round(0.70 * fthr)},
+        '1_high': {'min': round(0.70 * fthr)+1, 'max': round(0.81 * fthr)},
+        '2_low': {'min': round(0.81 * fthr)+1, 'max': round(0.85 * fthr)},
+        '2_high': {'min': round(0.85 * fthr)+1, 'max': round(0.89 * fthr)},
+        '3': {'min': round(0.89 * fthr)+1, 'max': round(0.93 * fthr)},
+        '4': {'min': round(0.93 * fthr)+1, 'max': round(0.99 * fthr)},
+        '5a': {'min': round(0.99 * fthr)+1, 'max': round(1.02 * fthr)},
+        '5b': {'min': round(1.02 * fthr)+1, 'max': round(1.06 * fthr)},
+        '5c': {'min': round(1.06 * fthr)+1, 'max': 1000},
+    }
+    return zones
+
+
 def _extract_zone(zones, zone_number):
     """ Return the min/max of the zone received."""
     zone = zones.get('heart_rate').get('zones')[zone_number-1]
@@ -126,17 +153,10 @@ def _extract_zone(zones, zone_number):
 
 
 def _heartrate_to_zones(heartrate, zones):
-    ranges = zones.get('heart_rate').get('zones')
-    if heartrate <= ranges[0]['max']:
-        return 1
-    elif heartrate <= ranges[1]['max']:
-        return 2
-    elif heartrate <= ranges[2]['max']:
-        return 3
-    elif heartrate <= ranges[3]['max']:
-        return 4
-    else:
-        return 5
+    for i in range(0, len(zones)):
+        index = list(zones.keys())[i]
+        if heartrate <= zones[index]['max']:
+            return index
 
 
 def _filter_stream_by_zone(stream, zone_number):

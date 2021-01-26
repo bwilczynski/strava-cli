@@ -228,5 +228,3 @@ Ftp:                   330 W
 
 ## Remaining todos:
 - fatigue
-- better hrtss (subdivision of zones) and for all activities if heartrate
-- from_ to for all activity types
