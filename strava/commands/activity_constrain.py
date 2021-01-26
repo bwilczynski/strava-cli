@@ -1,4 +1,5 @@
 import click
+from strava.utils import input_tuple_to_secs
 
 from strava.commands.activity_default import get_activity_from_ids
 from strava.decorators import output_option, login_required
@@ -7,7 +8,7 @@ _ACTIVITY_COLUMNS = ('key', 'value')
 
 
 @click.command(name='constrain',
-               help='Constrain the time of the activity on both side for deeper analysis.'
+               help='Constrain the time of the activity on both side for deeper analysis. Currently only for bike, run and workout.'
                )
 @click.argument('activity_id', required=True, nargs=1)
 @click.option('--from', '-f', 'from_', nargs=3, type=int, default=None,
@@ -18,5 +19,9 @@ _ACTIVITY_COLUMNS = ('key', 'value')
               help='Specify an FTP to overwrite strava FTP.')
 @output_option()
 @login_required
-def get_range_activity(output, activity_id, from_, to, ftp):
+def get_constrain_activity(output, activity_id, from_, to, ftp):
+    if from_:
+        from_ = input_tuple_to_secs(from_)
+    if to:
+        to = input_tuple_to_secs(to)
     return get_activity_from_ids(output, activity_ids=[activity_id], details=True, total=False, from_=from_, to=to, ftp=ftp)

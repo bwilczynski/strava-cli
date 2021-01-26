@@ -5,7 +5,6 @@ from numpy import mean
 import pandas as pd
 
 from strava import api
-from strava.utils import input_tuple_to_secs
 
 
 def to_dataframe(streams):
@@ -18,11 +17,11 @@ def filter_stream_by_from_to(stream, from_, to):
     # Apply the from-to if requested.
     time_range_secs = dict()
     if from_:
-        time_range_secs['from'] = input_tuple_to_secs(from_)
+        time_range_secs['from'] = from_
     else:
         time_range_secs['from'] = min(stream['time'])
     if to:
-        time_range_secs['to'] = input_tuple_to_secs(to)
+        time_range_secs['to'] = to
     else:
         time_range_secs['to'] = max(stream['time'])
     filtered_stream = stream[[all(t) for t in zip(stream['time'] >= time_range_secs.get('from'),

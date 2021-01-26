@@ -228,5 +228,5 @@ Ftp:                   330 W
 
 ## Remaining todos:
 - fatigue
-- laps command
 - better hrtss (subdivision of zones) and for all activities if heartrate
+- from_ to for all activity types

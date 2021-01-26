@@ -6,7 +6,7 @@ from strava.utils.streams_run import run_detail
 from strava import api
 from strava.decorators import format_result, TableFormat, OutputType
 from strava.formatters import format_property, apply_formatters, noop_formatter, format_seconds, \
-    format_gear, format_date, format_distance, format_heartrate, format_elevation, humanize, update_activity_name, \
+    format_gear, format_date, format_distance, format_heartrate, format_elevation, update_activity_name, \
     id_url_formatter
 
 _ACTIVITY_TOTAL_INIT = {
@@ -40,7 +40,14 @@ _ACTIVITY_DEFAULT_FORMATTERS = {
     'average_heartrate': format_heartrate,
     'total_elevation_gain': format_elevation,
 }
-
+_ACTIVITY_DEFAULT_LAP_FORMATTERS = {
+    'lap_name': noop_formatter,
+    'lap_time': format_seconds,
+    'average_heartrate': format_heartrate,
+    'max_heartrate': format_heartrate,
+    'distance': format_distance,
+    'total_elevation_gain': format_elevation,
+}
 
 def get_activity_from_ids(output, activity_ids, details=False, total=False, from_=None, to=None, ftp=None):
     activity_total = _ACTIVITY_TOTAL_INIT
@@ -55,24 +62,7 @@ def get_activity_from_ids(output, activity_ids, details=False, total=False, from
         # Add details if asked.
         met_formatters = None
         if details or total:
-            act_type = activity.get('type')
-            if act_type == 'Ride' or act_type == 'VirtualRide':
-                metrics, met_formatters = ride_detail(activity, from_, to, ftp)
-                activity_total['bike #'] += 1
-            elif act_type == 'Run':
-                metrics, met_formatters = run_detail(activity, from_, to)
-                activity_total['run #'] += 1
-            elif act_type == 'Workout':
-                metrics, met_formatters = workout_detail(activity, from_, to)
-                activity_total['strength #'] += 1
-            elif act_type == 'Swim':
-                metrics = {'tss': 0}
-                activity_total['swim #'] += 1
-            else:
-                metrics = {'tss': 0}
-                activity_total['other #'] += 1
-            # Returns the details.
-            activity.update(metrics)
+            activity, met_formatters, activity_total = _add_metrics_to_activity(activity, activity_total, from_, to, ftp)
 
         _format_activity(activity, met_formatters, output=output)
 
@@ -87,6 +77,54 @@ def get_activity_from_ids(output, activity_ids, details=False, total=False, from
         _format_activity_total(activity_total, output=output)
 
 
+def get_lap(output, activity, lap, ftp):
+    # Get the sec boundary for the lap.
+    laps = activity.get('laps')
+    from_ = laps[lap].get('start_index')
+    to = laps[lap].get('end_index')
+
+    # Compute the metrics for that part.
+    act, met_form, _ = _add_metrics_to_activity(activity, activity_total=None, from_=from_, to=to, ftp=ftp)
+    act['lap_name'] = activity.get('laps')[lap].get('name')
+    act['lap_time'] = activity.get('laps')[lap].get('moving_time')
+    act['average_heartrate'] = activity.get('laps')[lap].get('average_heartrate')
+    act['max_heartrate'] = activity.get('laps')[lap].get('max_heartrate')
+    act['distance'] = activity.get('laps')[lap].get('distance')
+    act['total_elevation_gain'] = activity.get('laps')[lap].get('total_elevation_gain')
+
+    return _format_activity_lap(act, met_form, output)
+
+
+def _add_metrics_to_activity(activity, activity_total=None, from_=None, to=None, ftp=None):
+    met_formatters = None
+
+    act_type = activity.get('type')
+    if act_type == 'Ride' or act_type == 'VirtualRide':
+        metrics, met_formatters = ride_detail(activity, from_, to, ftp)
+        if activity_total:
+            activity_total['bike #'] += 1
+    elif act_type == 'Run':
+        metrics, met_formatters = run_detail(activity, from_, to)
+        if activity_total:
+            activity_total['run #'] += 1
+    elif act_type == 'Workout':
+        metrics, met_formatters = workout_detail(activity, from_, to)
+        if activity_total:
+            activity_total['strength #'] += 1
+    elif act_type == 'Swim':
+        metrics = {'tss': 0}
+        if activity_total:
+            activity_total['swim #'] += 1
+    else:
+        metrics = {'tss': 0}
+        if activity_total:
+            activity_total['other #'] += 1
+
+    # Returns the details.
+    activity.update(metrics)
+    return activity, met_formatters, activity_total
+
+
 @format_result(table_columns=_ACTIVITY_COLUMNS, show_table_headers=False, table_format=TableFormat.PLAIN)
 def _format_activity(activity, formatters=None, output=None):
     final_formatters = [_ACTIVITY_TITLE_FORMATTERS, _ACTIVITY_DEFAULT_FORMATTERS]
@@ -98,6 +136,14 @@ def _format_activity(activity, formatters=None, output=None):
 @format_result(table_columns=_ACTIVITY_COLUMNS, show_table_headers=False, table_format=TableFormat.PLAIN)
 def _format_activity_total(activity, output=None):
     final_formatters = [_ACTIVITY_TOTAL_FORMATTERS]
+    return activity if output == OutputType.JSON.value else _as_table(activity, final_formatters)
+
+
+@format_result(table_columns=_ACTIVITY_COLUMNS, show_table_headers=False, table_format=TableFormat.PLAIN)
+def _format_activity_lap(activity, formatters=None, output=None):
+    final_formatters = [_ACTIVITY_DEFAULT_LAP_FORMATTERS]
+    if formatters:
+        final_formatters.append(formatters)
     return activity if output == OutputType.JSON.value else _as_table(activity, final_formatters)
 
 
