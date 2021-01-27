@@ -64,7 +64,10 @@ def get_activity_from_ids(output, activity_ids, details=False, total=False, from
         if details or total:
             activity, met_formatters, activity_total = _add_metrics_to_activity(activity, activity_total, from_, to, ftp)
 
-        _format_activity(activity, met_formatters, output=output)
+        if details:
+            _format_activity(activity, met_formatters, output=output)
+        else:
+            _format_activity(activity, None, output=output)
 
         # Adapts totals.
         if total:
