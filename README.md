@@ -225,6 +225,3 @@ Average cadence:       92 rpm
 Ftp:                   330 W
 ---                    ---
 ```
-
-## Remaining todos:
-- fatigue
