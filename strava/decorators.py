@@ -20,9 +20,10 @@ class OutputType(Enum):
 class TableFormat(Enum):
     SIMPLE = 'simple'
     PLAIN = 'plain'
+    GITHUB = "github"
 
 
-def format_result(table_columns=None, single=False, show_table_headers=True, table_format=TableFormat.SIMPLE):
+def format_result(table_columns=None, single=False, show_table_headers=True, table_format=TableFormat.GITHUB):
     def decorator_format_result(func):
         @functools.wraps(func)
         def wrapper_format_result(*args, **kwargs):
