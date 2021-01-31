@@ -4,3 +4,6 @@ from .streams_computations import to_dataframe, filter_stream_by_from_to, normal
     efficiency_factor, training_stress_score, intensity_factor, compute_hrtss
 from .activity_common import get_activity_from_ids
 from .streams_ride import ride_detail
+from .streams_run import run_detail
+from .streams_workout import workout_detail
+from .streams_other import other_detail

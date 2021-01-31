@@ -1,4 +1,6 @@
 import click
+
+from strava.utils.streams_other import other_detail
 from strava.utils.streams_ride import ride_detail
 from strava.utils.streams_workout import workout_detail
 from strava.utils.streams_run import run_detail
@@ -120,7 +122,7 @@ def _add_metrics_to_activity(activity, activity_total=None, from_=None, to=None,
         if activity_total:
             activity_total['swim #'] += 1
     else:
-        metrics = {'tss': 0}
+        metrics, met_formatters = other_detail(activity, from_, to)
         if activity_total:
             activity_total['other #'] += 1
 
