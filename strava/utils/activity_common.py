@@ -49,8 +49,9 @@ _ACTIVITY_DEFAULT_LAP_FORMATTERS = {
     'total_elevation_gain': format_elevation,
 }
 
+
 def get_activity_from_ids(output, activity_ids, details=False, total=False, from_=None, to=None, ftp=None):
-    activity_total = _ACTIVITY_TOTAL_INIT
+    activity_total = _ACTIVITY_TOTAL_INIT.copy()
     for i, activity_id in enumerate(activity_ids):
         if i > 0:
             click.echo()
@@ -66,7 +67,7 @@ def get_activity_from_ids(output, activity_ids, details=False, total=False, from
 
         if details:
             _format_activity(activity, met_formatters, output=output)
-        else:
+        elif not total:
             _format_activity(activity, None, output=output)
 
         # Adapts totals.
