@@ -10,3 +10,4 @@ from .login import login
 from .logout import logout
 from .profile import get_profile
 from .stats import get_stats
+from .calendar_week import get_cw
