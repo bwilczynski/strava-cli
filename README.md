@@ -5,12 +5,35 @@ All kudos to [bwilczynski](https://github.com/bwilczynski) for the great work.
 
 ## Installation
 
-To install it do `make install` from the root of the repo. 
+To install it do `make install` from the root of the repo. Make sure your default python version is >= 3.0.
+Sometimes, it's just easier to use a virtualenv like [pyenv](https://github.com/pyenv/pyenv-virtualenv).
+
+```sh
+> pyenv virtualenv 3.7.4 strava # make sure the python version you want is already istall, if not check pyenv docs.
+> pyenv activate strava # activates the env.
+> make install
+``` 
 
 ## Usage
 
-```sh
+```shell script
+> strava --help
 Usage: strava [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --version  Show the version and exit.
+  --help     Show this message and exit.
+
+Commands:
+  activities  Get a list of recent activities.
+  activity    Get the summary of one or multiple activities.
+  config      Configure and setup your strava account.
+  cw          Helper to get the current calendar week
+  login       Login to the strava account.
+  logout      Delete the current access token to logout of the strava...
+  profile     Get the profile of the connected athlete.
+  stats       Get some stats about the connected athlete.
+  upload      Upload local files to strava.
 ```
 
 ### Get Started
@@ -21,20 +44,20 @@ your application's Client ID and Client Secret.
 Alternatively set the following environment variables before running `strava`:
 
 ```sh
-export STRAVA_CLIENT_ID={YOUR_CLIENT_ID}
-export STRAVA_CLIENT_SECRET={YOUR_CLIENT_SECRET}
+> export STRAVA_CLIENT_ID={YOUR_CLIENT_ID}
+> export STRAVA_CLIENT_SECRET={YOUR_CLIENT_SECRET}
 ```
 
 Login to your Strava service (opens a web browser sending user to Strava login service):
 
 ```sh
-strava login
+> strava login
 ```
 
 For usage and help content, pass in the `--help` parameter, for example:
 
 ```sh
-strava --help
+> strava --help
 ```
 
 ### Available commands
@@ -42,7 +65,7 @@ strava --help
 Get recent, yearly, total stats:
 
 ```console
-➜ strava stats  
+> strava stats  
 
 Type           Count  Distance     Moving time    Elevation gain
 -----------  -------  -----------  -------------  ----------------
@@ -61,7 +84,7 @@ swim all           1  2.05 km      43:40
 List your recent activities:
 
 ```console
-➜ strava activities list -pp 5
+> strava activities list -pp 5
 
         Id  Start date                 Type         Name                                     Moving time    Distance
 ----------  -------------------------  -----------  ---------------------------------------  -------------  ----------
@@ -74,7 +97,7 @@ List your recent activities:
 
 List your weekly activities or the activities for a specific week:
 ```console
-➜ strava activities week --current
+> strava activities week --current
 
         Id  Start date                 Type         Name                                     Moving time    Distance
 ----------  -------------------------  -----------  ---------------------------------------  -------------  ----------
@@ -88,7 +111,7 @@ List your weekly activities or the activities for a specific week:
 
 You can get more information about specific activities by doing:
 ```console 
-➜ strava activity list 4667970175
+> strava activity list 4667970175
 
 Name:                  Watopia
                        20' warm up P Z1
@@ -107,7 +130,7 @@ Total elevation gain:  328 m
 
 And additional details:
 ```console 
-➜ strava activity list 4667970175 --details
+> strava activity list 4667970175 --details
 
 Name:                  Watopia
                        20' warm up P Z1
@@ -135,7 +158,7 @@ Ftp:                   330 W
 
 Listing all that information for a specific week is possible as well:
 ```console
-➜ strava activity week --week_number 1 2021
+> strava activity week --week_number 1 2021
 Name:                  First of the season
                        Very nice valley
 Id:                    4565601437 (https://www.strava.com/activities/4565601437)
@@ -163,7 +186,7 @@ Total elevation gain:  379 m
 
 Basic totals can be done from list of detailed activities
 ```console
-➜ strava activity week --week_number 1 2021 -t
+> strava activity week --week_number 1 2021 -t
 
 Name:                  First of the season
                        Very nice valley
@@ -200,7 +223,7 @@ Total tss:             0
 
 For further analysis, you can constrain the computation to specific part of your activity:
 ```console
-➜ strava activity constrain 4667970175 --from 0 10 0 --to 0 50 0
+> strava activity constrain 4667970175 --from 0 10 0 --to 0 50 0
 
 Name:                  Watopia
                        20' warm up P Z1
@@ -224,4 +247,71 @@ Efficiency factor:     1.3
 Average cadence:       92 rpm
 Ftp:                   330 W
 ---                    ---
+```
+
+If you are using laps you can display metrics for each of them
+```console
+> strava activity laps 4604570523
+Name:                  AE2 with 4x3min Z4
+                       Following workouts on the wahoo is great
+Id:                    4604570523 (https://www.strava.com/activities/4604570523)
+---                    ---
+Gear:                  Canyon (10117.94 km)
+Start date:            2021-01-11 17:21:09+01:00
+Moving time:           1h 20m
+Distance:              29.97 km
+Average heartrate:     135 bpm
+Total elevation gain:
+---                    ---
+Tss:                   56
+Average power:         203 W
+Normalized power:      213 W
+Intensity factor:      0.65
+Variability index:     1.05
+Efficiency factor:     1.55
+Average cadence:       87 rpm
+Ftp:                   330 W
+---                    ---
+
+Lap name:              Lap 1
+Lap time:              15:01
+Average heartrate:     111 bpm
+Max heartrate:         128 bpm
+Distance:              4.25 km
+Total elevation gain:
+---                    ---
+Tss:                   5
+Average power:         153 W
+Normalized power:      155 W
+Intensity factor:      0.47
+Variability index:     1.01
+Efficiency factor:
+Average cadence:       82 rpm
+Ftp:                   330 W
+---                    ---
+
+Lap name:              Lap 2
+Lap time:              12:00
+Average heartrate:     130 bpm
+Max heartrate:         140 bpm
+Distance:              4.49 km
+Total elevation gain:
+---                    ---
+Tss:                   7
+Average power:         207 W
+Normalized power:      207 W
+Intensity factor:      0.63
+Variability index:     1.0
+Efficiency factor:     1.53
+Average cadence:       86 rpm
+Ftp:                   330 W
+---                    ---
+
+...
+```
+
+There is also helper functions as the following that provide the current calendar week.
+```console
+> strava cw
+6
 ```
