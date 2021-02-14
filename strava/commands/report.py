@@ -15,6 +15,7 @@ _DAY_TITLE = ['## Monday', '## Tuesday', '## Wednesday', '## Thursday', '## Frid
 _TOTAL_FORMATTERS = {
     'period': noop_formatter,
     **ACTIVITY_TOTAL_FORMATTERS,
+    'weight': noop_formatter,
 }
 
 @click.command(name='report',
@@ -55,6 +56,7 @@ def get_report(output, current, last, calendar_week, all_days, ftp):
     click.echo('## Summary')
     activity_buffer, activity_total = split_activity_and_total(activity_ids, ftp)
     activity_total['period'] = '<placeholder>'
+    activity_total['weight'] = '<placeholder>'
     for (key, value) in activity_total.items():
         if value == 0:
             _TOTAL_FORMATTERS.pop(key)
