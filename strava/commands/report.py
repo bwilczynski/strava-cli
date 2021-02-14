@@ -65,19 +65,24 @@ def get_report(output, current, last, calendar_week, all_days, ftp):
     click.echo('\nNotes: <placeholder>')
 
     # Days. Only the training days.
-    activity_days = [datetime.datetime.strptime(a.get('start_date'), '%Y-%m-%dT%H:%M:%SZ').weekday()
-                     for a in activities] if not all_days else {0, 1, 2, 3, 4, 5, 6}
-    for ad in set(activity_days):
-        index = [ad == activity_day for activity_day in activity_days]
-        click.echo(f'\n{_DAY_TITLE[ad]}')
-        for id in list(compress(activity_ids, index)):
-            click.echo('Workout: <placeholder>\n')
-            format_activity(activity_buffer[id].get('activity'), activity_buffer[id].get('met_formatters'))
-            click.echo()
+    activity_days = [datetime.datetime.strptime(a.get('start_date'), '%Y-%m-%dT%H:%M:%SZ').weekday() for a in activities]
+    #if not all_days else [0, 1, 2, 3, 4, 5, 6]
+    for day in {0, 1, 2, 3, 4, 5, 6}:
+        if day in activity_days:
+            index = [day == activity_day for activity_day in activity_days]
+            click.echo(f'\n{_DAY_TITLE[day]}')
+            for id in list(compress(activity_ids, index)):
+                click.echo('Workout: <placeholder>\n')
+                format_activity(activity_buffer[id].get('activity'), activity_buffer[id].get('met_formatters'))
+                click.echo()
 
-        click.echo('Notes: <placeholder>\n'
-                   'Nutrition: <placeholder>\n'
-                   'Recovery: <placeholder>')
+            click.echo('Notes: <placeholder>\n'
+                       'Nutrition: <placeholder>\n'
+                       'Recovery: <placeholder>')
+        elif all_days:
+            click.echo(f'\n{_DAY_TITLE[day]}')
+            click.echo('Notes: <placeholder>\n'
+                       'Recovery: <placeholder>')
 
 
 def split_activity_and_total(activity_ids, ftp=None):
