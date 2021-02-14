@@ -4,8 +4,8 @@ from strava.decorators import output_option, login_required
 from strava.utils import get_activity_from_ids
 
 
-@click.command(name='list',
-               help='List and display all the recent activities with additional information.'
+@click.command(name='id',
+               help='List and display all the recent activities with additional information based on their ids.'
                )
 @click.argument('activity_ids', required=False, nargs=-1)
 @click.option('--details', '-d', default=False, is_flag=True,

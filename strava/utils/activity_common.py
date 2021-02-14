@@ -158,5 +158,6 @@ def _as_table(activity, formatters):
     for i in range(0, len(formatters)):
         table.extend([{'key': format_property(k), 'value': v}
                       for k, v in apply_formatters(activity, formatters[i]).items()])
-        table.extend([{'key': '---', 'value': '---'}])
+        if i != len(formatters)-1:
+            table.extend([{'key': '---', 'value': '---'}])
     return table
