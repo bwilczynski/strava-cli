@@ -4,8 +4,8 @@ import click
 import datetime
 
 
-def activities_ga_kwargs(current, last, week_number):
-    if not filter_unique_week_flag(current, last, week_number):
+def activities_ga_kwargs(current, last, calendar_week):
+    if not filter_unique_week_flag(current, last, calendar_week):
         click.echo("Only one option from --current, --last and --week-number can be chosen at one time.")
         sys.exit()
 
@@ -15,9 +15,9 @@ def activities_ga_kwargs(current, last, week_number):
     if last:
         ga_kwargs['after'], ga_kwargs['before'] = \
             _get_weekly_before_and_after(date=datetime.datetime.now().date()-datetime.timedelta(days=7))
-    if week_number:
+    if calendar_week:
         ga_kwargs['after'], ga_kwargs['before'] = \
-            _get_weekly_before_and_after(date=_monday_of_calenderweek(week_number[0], week_number[1]))
+            _get_weekly_before_and_after(date=_monday_of_calenderweek(calendar_week[0], calendar_week[1]))
     return ga_kwargs
 
 
@@ -30,8 +30,8 @@ def input_tuple_to_secs(t):
         raise
 
 
-def filter_unique_week_flag(current, last, week_number):
-    wn = 1 if week_number else 0
+def filter_unique_week_flag(current, last, calendar_week):
+    wn = 1 if calendar_week else 0
     return current + last + wn == 1
 
 
@@ -43,7 +43,7 @@ def _get_weekly_before_and_after(date=datetime.datetime.now().date()):
     return start_epoch, end_epoch
 
 
-def _monday_of_calenderweek(week_number, year):
+def _monday_of_calenderweek(calendar_week, year):
     first = datetime.date(year, 1, 1)
     base = 1 if first.isocalendar()[1] == 1 else 8
-    return first + datetime.timedelta(days=base - first.isocalendar()[2] + 7 * (week_number - 1))
+    return first + datetime.timedelta(days=base - first.isocalendar()[2] + 7 * (calendar_week - 1))

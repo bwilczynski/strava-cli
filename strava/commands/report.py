@@ -41,8 +41,8 @@ def get_report(output, current, last, calendar_week, ftp):
     activity_ids = [a.get('id') for a in activities]
 
     # Title of the reporting
-    calendar_week = datetime.datetime.strptime(activities[0].get('start_date'), '%Y-%m-%dT%H:%M:%SZ').isocalendar()[1]
-    click.echo(f'# Week {calendar_week}\n'
+    cw = datetime.datetime.strptime(activities[0].get('start_date'), '%Y-%m-%dT%H:%M:%SZ').isocalendar()[1]
+    click.echo(f'# Week {cw}\n'
                f'Workout types:   \n'
                '* bike: <placeholder>  \n'
                '* run: <placeholder>  \n'
@@ -58,7 +58,8 @@ def get_report(output, current, last, calendar_week, ftp):
             _TOTAL_FORMATTERS.pop(key)
     _format_report_total(activity_total, _TOTAL_FORMATTERS, output)
 
-    weekly_activities(output=output, quiet=False, current=current, last=last, week_number=calendar_week)
+    click.echo(f'{current}, {last}, {calendar_week}')
+    weekly_activities(output=output, quiet=False, current=current, last=last, calendar_week=calendar_week)
 
     # Days
     activity_days = [datetime.datetime.strptime(a.get('start_date'), '%Y-%m-%dT%H:%M:%SZ').weekday() for a in activities]

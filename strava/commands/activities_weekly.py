@@ -24,12 +24,12 @@ def get_weekly_activities(output, quiet, current, last, calendar_week):
 
 
 @format_result(table_columns=SUMMARY_ACTIVITY_COLUMNS)
-def weekly_activities(output, quiet, current, last, week_number):
+def weekly_activities(output, quiet, current, last, calendar_week):
     # If no flag is set, we use --current.
-    if filter_unique_week_flag(current, last, week_number) == 0:
+    if filter_unique_week_flag(current, last, calendar_week) == 0:
         current = True
 
-    ga_kwargs = activities_ga_kwargs(current, last, week_number)
+    ga_kwargs = activities_ga_kwargs(current, last, calendar_week)
     result = api.get_activities(**ga_kwargs)
     result.reverse()
 
