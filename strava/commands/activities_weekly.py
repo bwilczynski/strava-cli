@@ -17,7 +17,7 @@ from strava.utils.activities_common import as_table, SUMMARY_ACTIVITY_COLUMNS
 @click.option('--last', '-l', is_flag=True, default=False,
               help='Get the last week activities')
 @click.option('--calendar_week', '-cw', type=int, nargs=2,
-              help='Get the activities for the specified week number.\n Need two arguments (week number, year) like: -wn 2 2021.')
+              help='Get the activities for the specified calendar week.\n Need two arguments (week number, year) like: -cw 2 2021.')
 @login_required
 def get_weekly_activities(output, quiet, current, last, calendar_week):
     weekly_activities(output, quiet, current, last, calendar_week)

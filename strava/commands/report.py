@@ -20,14 +20,14 @@ _TOTAL_FORMATTERS = {
 @click.command(name='report',
                help='Reports the activities of a given week with additional information.'
                )
+@click.option('--all_days', '-a', is_flag=True, default=False,
+              help='To display all week days. If not only training days are displayed.')
 @click.option('--current', '-c', is_flag=True, default=False,
               help='Get the current week activities')
 @click.option('--last', '-l', is_flag=True, default=False,
               help='Get the last week activities')
 @click.option('--calendar_week', '-cw', type=int, nargs=2,
-              help='Get the activities for the specified week number.\n Need two arguments (week number, year) like: -wn 2 2021.')
-@click.option('--all_days', '-a', is_flag=True, default=False,
-              help='To display all week days. If not only training days are displayed.')
+              help='Get the activities for the specified calendar week.\n Need two arguments (week number, year) like: -cw 2 2021.')
 @click.option('--ftp', type=int,
               help='Specify an FTP to overwrite strava FTP.')
 @output_option()
