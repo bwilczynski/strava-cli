@@ -1,5 +1,6 @@
 from functools import reduce
 
+import click
 import pandas as pd
 
 from strava import api
@@ -17,7 +18,15 @@ def other_detail(activity, from_, to):
     sensors_available = [list(sbk.columns) for sbk in stream_by_keys]
     flat_sensors_available = [item for sublist in sensors_available for item in sublist]
     if all([s in flat_sensors_available for s in sensors]):
-        stream = reduce(lambda left, right: pd.merge(left, right, on='distance'), stream_by_keys)
+        # Try to merge the streams.
+        try:
+            stream = reduce(lambda left, right: pd.merge(left, right, on='distance'), stream_by_keys)
+        except KeyError:
+            try:
+                stream = reduce(lambda left, right: pd.merge(left, right, on='time'), stream_by_keys)
+            except KeyError:
+                click.echo('Enable to merge the streams on distance or time.')
+
         stream = stream.drop_duplicates(subset='time')
         stream = filter_stream_by_from_to(stream, from_, to)
 
