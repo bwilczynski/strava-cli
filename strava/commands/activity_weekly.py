@@ -15,21 +15,21 @@ from strava.utils import filter_unique_week_flag
 @click.option('--total', '-t', default=False, is_flag=True,
               help='Indicates whenever the total should be computed.\n Only available with multiple ids. Will set --details to True.')
 @click.option('--current', '-c', is_flag=True, default=False,
-              help='Get the current week activities')
+              help='[DEFAULT] Get the current week activities')  # It's tricky, this is set in the function itself
 @click.option('--last', '-l', is_flag=True, default=False,
               help='Get the last week activities')
-@click.option('--week_number', '-wn', type=int, nargs=2,
+@click.option('--calendar_week', '-cw', type=int, nargs=2,
               help='Get the activities for the specified week number.\n Need two arguments (week number, year) like: -wn 2 2021.')
 @click.option('--ftp', type=int,
               help='Specify an FTP to overwrite strava FTP.')
 @output_option()
 @login_required
-def get_weekly_activity(output, details, total, current, last, week_number, ftp):
+def get_weekly_activity(output, details, total, current, last, calendar_week, ftp):
     # If no flag is set, we use --current.
-    if filter_unique_week_flag(current, last, week_number) == 0:
+    if filter_unique_week_flag(current, last, calendar_week) == 0:
         current = True
 
-    ga_kwargs = activities_ga_kwargs(current, last, week_number)
+    ga_kwargs = activities_ga_kwargs(current, last, calendar_week)
     activities = api.get_activities(**ga_kwargs)
     activities.reverse()
     activity_ids = [a.get('id') for a in activities]

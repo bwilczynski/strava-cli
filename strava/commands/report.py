@@ -24,25 +24,25 @@ _TOTAL_FORMATTERS = {
               help='Get the current week activities')
 @click.option('--last', '-l', is_flag=True, default=False,
               help='Get the last week activities')
-@click.option('--week_number', '-wn', type=int, nargs=2,
+@click.option('--calendar_week', '-cw', type=int, nargs=2,
               help='Get the activities for the specified week number.\n Need two arguments (week number, year) like: -wn 2 2021.')
 @click.option('--ftp', type=int,
               help='Specify an FTP to overwrite strava FTP.')
 @output_option()
 @login_required
-def get_report(output, current, last, week_number, ftp):
+def get_report(output, current, last, calendar_week, ftp):
     # If no flag is set, we use --current.
-    if filter_unique_week_flag(current, last, week_number) == 0:
+    if filter_unique_week_flag(current, last, calendar_week) == 0:
         current = True
 
-    ga_kwargs = activities_ga_kwargs(current, last, week_number)
+    ga_kwargs = activities_ga_kwargs(current, last, calendar_week)
     activities = api.get_activities(**ga_kwargs)
     activities.reverse()
     activity_ids = [a.get('id') for a in activities]
 
     # Title of the reporting
-    week_number = datetime.datetime.strptime(activities[0].get('start_date'), '%Y-%m-%dT%H:%M:%SZ').isocalendar()[1]
-    click.echo(f'# Week {week_number}\n'
+    calendar_week = datetime.datetime.strptime(activities[0].get('start_date'), '%Y-%m-%dT%H:%M:%SZ').isocalendar()[1]
+    click.echo(f'# Week {calendar_week}\n'
                f'Workout types:   \n'
                '* bike: <placeholder>  \n'
                '* run: <placeholder>  \n'
@@ -58,7 +58,7 @@ def get_report(output, current, last, week_number, ftp):
             _TOTAL_FORMATTERS.pop(key)
     _format_report_total(activity_total, _TOTAL_FORMATTERS, output)
 
-    weekly_activities(output=output, quiet=False, current=current, last=last, week_number=week_number)
+    weekly_activities(output=output, quiet=False, current=current, last=last, week_number=calendar_week)
 
     # Days
     activity_days = [datetime.datetime.strptime(a.get('start_date'), '%Y-%m-%dT%H:%M:%SZ').weekday() for a in activities]

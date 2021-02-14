@@ -13,14 +13,14 @@ from strava.utils.activities_common import as_table, SUMMARY_ACTIVITY_COLUMNS
 @click.option('--quiet', '-q', is_flag=True, default=False,
               help='Keep the command quiet.')
 @click.option('--current', '-c', is_flag=True, default=False,
-              help='Get the current week activities')
+              help='[DEFAULT] Get the current week activities')  # It's tricky, this is set in the function itself
 @click.option('--last', '-l', is_flag=True, default=False,
               help='Get the last week activities')
-@click.option('--week_number', '-wn', type=int, nargs=2,
+@click.option('--calendar_week', '-cw', type=int, nargs=2,
               help='Get the activities for the specified week number.\n Need two arguments (week number, year) like: -wn 2 2021.')
 @login_required
-def get_weekly_activities(output, quiet, current, last, week_number):
-    weekly_activities(output, quiet, current, last, week_number)
+def get_weekly_activities(output, quiet, current, last, calendar_week):
+    weekly_activities(output, quiet, current, last, calendar_week)
 
 
 @format_result(table_columns=SUMMARY_ACTIVITY_COLUMNS)
