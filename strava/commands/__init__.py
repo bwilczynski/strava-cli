@@ -1,5 +1,6 @@
+# List all commands available in the cli.
 from .activities_default import get_activities
-from .activities_weekly import get_weekly_activities
+from .activities_weekly import get_weekly_activities, weekly_activities
 from .activity_default import get_activity
 from .activity_weekly import get_weekly_activity
 from .activity_constrain import get_constrain_activity
@@ -11,3 +12,4 @@ from .logout import logout
 from .profile import get_profile
 from .stats import get_stats
 from .calendar_week import get_cw
+from .report import get_report

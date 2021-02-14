@@ -3,7 +3,7 @@ import click
 from strava.commands import get_activity, get_constrain_activity, get_weekly_activity, get_lap_activity
 
 
-@click.group(name='activity', help='Get the summary of one or multiple activities.')
+@click.group(name='activity', help='[GROUP] Get the summary of one or multiple activities.')
 def cli_activity():
     pass
 

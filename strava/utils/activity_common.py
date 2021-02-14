@@ -11,7 +11,7 @@ from strava.formatters import format_property, apply_formatters, noop_formatter,
     format_gear, format_date, format_distance, format_heartrate, format_elevation, update_activity_name, \
     id_url_formatter
 
-_ACTIVITY_TOTAL_INIT = {
+ACTIVITY_TOTAL_INIT = {
     'bike #': 0,
     'run #': 0,
     'swim #': 0,
@@ -20,7 +20,7 @@ _ACTIVITY_TOTAL_INIT = {
     'total_time': 0,
     'total_tss': 0,
 }
-_ACTIVITY_TOTAL_FORMATTERS = {
+ACTIVITY_TOTAL_FORMATTERS = {
     'total_tss': noop_formatter,
     'total_time': format_seconds,
     'bike #': noop_formatter,
@@ -29,7 +29,7 @@ _ACTIVITY_TOTAL_FORMATTERS = {
     'strength #': noop_formatter,
     'other #': noop_formatter,
 }
-_ACTIVITY_COLUMNS = ('key', 'value')
+ACTIVITY_COLUMNS = ('key', 'value')
 _ACTIVITY_TITLE_FORMATTERS = {
     'name': noop_formatter,
     'id': id_url_formatter,
@@ -53,7 +53,7 @@ _ACTIVITY_DEFAULT_LAP_FORMATTERS = {
 
 
 def get_activity_from_ids(output, activity_ids, details=False, total=False, from_=None, to=None, ftp=None):
-    activity_total = _ACTIVITY_TOTAL_INIT.copy()
+    activity_total = ACTIVITY_TOTAL_INIT.copy()
     for i, activity_id in enumerate(activity_ids):
         if i > 0:
             click.echo()
@@ -65,12 +65,12 @@ def get_activity_from_ids(output, activity_ids, details=False, total=False, from
         # Add details if asked.
         met_formatters = None
         if details or total:
-            activity, met_formatters, activity_total = _add_metrics_to_activity(activity, activity_total, from_, to, ftp)
+            activity, met_formatters, activity_total = add_metrics_to_activity(activity, activity_total, from_, to, ftp)
 
         if details:
-            _format_activity(activity, met_formatters, output=output)
+            format_activity(activity, met_formatters, output=output)
         elif not total:
-            _format_activity(activity, None, output=output)
+            format_activity(activity, None, output=output)
 
         # Adapts totals.
         if total:
@@ -90,7 +90,7 @@ def get_lap(output, activity, lap, ftp):
     to = laps[lap].get('end_index')
 
     # Compute the metrics for that part.
-    act, met_form, _ = _add_metrics_to_activity(activity, activity_total=None, from_=from_, to=to, ftp=ftp)
+    act, met_form, _ = add_metrics_to_activity(activity, activity_total=None, from_=from_, to=to, ftp=ftp)
     act['lap_name'] = activity.get('laps')[lap].get('name')
     act['lap_time'] = activity.get('laps')[lap].get('moving_time')
     act['average_heartrate'] = activity.get('laps')[lap].get('average_heartrate')
@@ -101,7 +101,7 @@ def get_lap(output, activity, lap, ftp):
     return _format_activity_lap(act, met_form, output)
 
 
-def _add_metrics_to_activity(activity, activity_total=None, from_=None, to=None, ftp=None):
+def add_metrics_to_activity(activity, activity_total=None, from_=None, to=None, ftp=None):
     met_formatters = None
 
     act_type = activity.get('type')
@@ -131,21 +131,21 @@ def _add_metrics_to_activity(activity, activity_total=None, from_=None, to=None,
     return activity, met_formatters, activity_total
 
 
-@format_result(table_columns=_ACTIVITY_COLUMNS, show_table_headers=False, table_format=TableFormat.PLAIN)
-def _format_activity(activity, formatters=None, output=None):
+@format_result(table_columns=ACTIVITY_COLUMNS, show_table_headers=False, table_format=TableFormat.PLAIN)
+def format_activity(activity, formatters=None, output=None):
     final_formatters = [_ACTIVITY_TITLE_FORMATTERS, _ACTIVITY_DEFAULT_FORMATTERS]
     if formatters:
         final_formatters.append(formatters)
     return activity if output == OutputType.JSON.value else _as_table(activity, final_formatters)
 
 
-@format_result(table_columns=_ACTIVITY_COLUMNS, show_table_headers=False, table_format=TableFormat.PLAIN)
+@format_result(table_columns=ACTIVITY_COLUMNS, show_table_headers=False, table_format=TableFormat.PLAIN)
 def _format_activity_total(activity, output=None):
-    final_formatters = [_ACTIVITY_TOTAL_FORMATTERS]
+    final_formatters = [ACTIVITY_TOTAL_FORMATTERS]
     return activity if output == OutputType.JSON.value else _as_table(activity, final_formatters)
 
 
-@format_result(table_columns=_ACTIVITY_COLUMNS, show_table_headers=False, table_format=TableFormat.PLAIN)
+@format_result(table_columns=ACTIVITY_COLUMNS, show_table_headers=False, table_format=TableFormat.PLAIN)
 def _format_activity_lap(activity, formatters=None, output=None):
     final_formatters = [_ACTIVITY_DEFAULT_LAP_FORMATTERS]
     if formatters:

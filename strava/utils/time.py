@@ -5,7 +5,7 @@ import datetime
 
 
 def activities_ga_kwargs(current, last, week_number):
-    if not _filter_unique_week_flag(current, last, week_number):
+    if not filter_unique_week_flag(current, last, week_number):
         click.echo("Only one option from --current, --last and --week-number can be chosen at one time.")
         sys.exit()
 
@@ -30,7 +30,7 @@ def input_tuple_to_secs(t):
         raise
 
 
-def _filter_unique_week_flag(current, last, week_number):
+def filter_unique_week_flag(current, last, week_number):
     wn = 1 if week_number else 0
     return current + last + wn == 1
 

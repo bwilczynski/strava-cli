@@ -2,7 +2,7 @@ import click
 
 from strava import api
 from strava.decorators import output_option, login_required, format_result, OutputType
-from strava.utils.time import activities_ga_kwargs
+from strava.utils.time import activities_ga_kwargs, filter_unique_week_flag
 from strava.utils.activities_common import as_table, SUMMARY_ACTIVITY_COLUMNS
 
 
@@ -19,8 +19,16 @@ from strava.utils.activities_common import as_table, SUMMARY_ACTIVITY_COLUMNS
 @click.option('--week_number', '-wn', type=int, nargs=2,
               help='Get the activities for the specified week number.\n Need two arguments (week number, year) like: -wn 2 2021.')
 @login_required
-@format_result(table_columns=SUMMARY_ACTIVITY_COLUMNS)
 def get_weekly_activities(output, quiet, current, last, week_number):
+    weekly_activities(output, quiet, current, last, week_number)
+
+
+@format_result(table_columns=SUMMARY_ACTIVITY_COLUMNS)
+def weekly_activities(output, quiet, current, last, week_number):
+    # If no flag is set, we use --current.
+    if filter_unique_week_flag(current, last, week_number) == 0:
+        current = True
+
     ga_kwargs = activities_ga_kwargs(current, last, week_number)
     result = api.get_activities(**ga_kwargs)
     result.reverse()
