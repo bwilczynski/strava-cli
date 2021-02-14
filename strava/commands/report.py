@@ -26,11 +26,13 @@ _TOTAL_FORMATTERS = {
               help='Get the last week activities')
 @click.option('--calendar_week', '-cw', type=int, nargs=2,
               help='Get the activities for the specified week number.\n Need two arguments (week number, year) like: -wn 2 2021.')
+@click.option('--all_days', '-a', is_flag=True, default=False,
+              help='To display all week days. If not only training days are displayed.')
 @click.option('--ftp', type=int,
               help='Specify an FTP to overwrite strava FTP.')
 @output_option()
 @login_required
-def get_report(output, current, last, calendar_week, ftp):
+def get_report(output, current, last, calendar_week, all_days, ftp):
     # If no flag is set, we use --current.
     if filter_unique_week_flag(current, last, calendar_week) == 0:
         current = True
@@ -40,16 +42,16 @@ def get_report(output, current, last, calendar_week, ftp):
     activities.reverse()
     activity_ids = [a.get('id') for a in activities]
 
-    # Title of the reporting
-    cw = datetime.datetime.strptime(activities[0].get('start_date'), '%Y-%m-%dT%H:%M:%SZ').isocalendar()[1]
-    click.echo(f'# Week {cw}\n'
-               f'Workout types:   \n'
-               '* bike: <placeholder>  \n'
-               '* run: <placeholder>  \n'
-               '* swim: <placeholder>  \n'
-               '* strength: <placeholder>  \n')
+    # Title of the reporting.
+    cw_report = datetime.datetime.strptime(activities[0].get('start_date'), '%Y-%m-%dT%H:%M:%SZ').isocalendar()[1]
+    click.echo(f'# Week {cw_report}\n'
+               f'Workout types:\n'
+               '* bike: <placeholder>\n'
+               '* run: <placeholder>\n'
+               '* swim: <placeholder>\n'
+               '* strength: <placeholder>\n')
 
-    # Summary
+    # Summary.
     click.echo('## Summary')
     activity_buffer, activity_total = split_activity_and_total(activity_ids, ftp)
     activity_total['period'] = '<placeholder>'
@@ -58,16 +60,24 @@ def get_report(output, current, last, calendar_week, ftp):
             _TOTAL_FORMATTERS.pop(key)
     _format_report_total(activity_total, _TOTAL_FORMATTERS, output)
 
-    click.echo(f'{current}, {last}, {calendar_week}')
+    click.echo()
     weekly_activities(output=output, quiet=False, current=current, last=last, calendar_week=calendar_week)
+    click.echo('\nNotes: <placeholder>')
 
-    # Days
-    activity_days = [datetime.datetime.strptime(a.get('start_date'), '%Y-%m-%dT%H:%M:%SZ').weekday() for a in activities]
+    # Days. Only the training days.
+    activity_days = [datetime.datetime.strptime(a.get('start_date'), '%Y-%m-%dT%H:%M:%SZ').weekday()
+                     for a in activities] if not all_days else {0, 1, 2, 3, 4, 5, 6}
     for ad in set(activity_days):
         index = [ad == activity_day for activity_day in activity_days]
         click.echo(f'\n{_DAY_TITLE[ad]}')
         for id in list(compress(activity_ids, index)):
-            format_activity(activity_buffer[id])
+            click.echo('Workout: <placeholder>\n')
+            format_activity(activity_buffer[id].get('activity'), activity_buffer[id].get('met_formatters'))
+            click.echo()
+
+        click.echo('Notes: <placeholder>\n'
+                   'Nutrition: <placeholder>\n'
+                   'Recovery: <placeholder>')
 
 
 def split_activity_and_total(activity_ids, ftp=None):

@@ -8,7 +8,7 @@ All kudos to [bwilczynski](https://github.com/bwilczynski) for the great work.
 To install it do `make install` from the root of the repo. Make sure your default python version is >= 3.0.
 Sometimes, it's just easier to use a virtualenv like [pyenv](https://github.com/pyenv/pyenv-virtualenv).
 
-```sh
+```shell script
 > pyenv virtualenv 3.7.4 strava # make sure the python version you want is already istall, if not check pyenv docs.
 > pyenv activate strava # activates the env.
 > make install
@@ -43,20 +43,20 @@ your application's Client ID and Client Secret.
 
 Alternatively set the following environment variables before running `strava`:
 
-```sh
+```shell script
 > export STRAVA_CLIENT_ID={YOUR_CLIENT_ID}
 > export STRAVA_CLIENT_SECRET={YOUR_CLIENT_SECRET}
 ```
 
 Login to your Strava service (opens a web browser sending user to Strava login service):
 
-```sh
+```shell script
 > strava login
 ```
 
 For usage and help content, pass in the `--help` parameter, for example:
 
-```sh
+```shell script
 > strava --help
 ```
 
@@ -64,7 +64,7 @@ For usage and help content, pass in the `--help` parameter, for example:
 
 Get recent, yearly, total stats:
 
-```console
+```shell script
 > strava stats  
 
 Type           Count  Distance     Moving time    Elevation gain
@@ -83,7 +83,7 @@ swim all           1  2.05 km      43:40
 
 List your recent activities:
 
-```console
+```shell script
 > strava activities list -pp 5
 
         Id  Start date                 Type         Name                                     Moving time    Distance
@@ -96,7 +96,7 @@ List your recent activities:
 ```
 
 List your weekly activities or the activities for a specific week:
-```console
+```shell script
 > strava activities week --current
 
         Id  Start date                 Type         Name                                     Moving time    Distance
@@ -110,7 +110,7 @@ List your weekly activities or the activities for a specific week:
 ```
 
 You can get more information about specific activities by doing:
-```console 
+```shell script 
 > strava activity list 4667970175
 
 Name:                  Watopia
@@ -129,7 +129,7 @@ Total elevation gain:  328 m
 ```
 
 And additional details:
-```console 
+```shell script 
 > strava activity list 4667970175 --details
 
 Name:                  Watopia
@@ -157,7 +157,7 @@ Ftp:                   330 W
 ```
 
 Listing all that information for a specific week is possible as well:
-```console
+```shell script
 > strava activity week --week_number 1 2021
 Name:                  First of the season
                        Very nice valley
@@ -185,7 +185,7 @@ Total elevation gain:  379 m
 ```
 
 Basic totals can be done from list of detailed activities
-```console
+```shell script
 > strava activity week --week_number 1 2021 -t
 
 Name:                  First of the season
@@ -222,7 +222,7 @@ Total tss:             0
 ```
 
 For further analysis, you can constrain the computation to specific part of your activity:
-```console
+```shell script
 > strava activity constrain 4667970175 --from 0 10 0 --to 0 50 0
 
 Name:                  Watopia
@@ -250,7 +250,7 @@ Ftp:                   330 W
 ```
 
 If you are using laps you can display metrics for each of them
-```console
+```shell script
 > strava activity laps 4604570523
 Name:                  AE2 with 4x3min Z4
                        Following workouts on the wahoo is great
@@ -311,7 +311,57 @@ Ftp:                   330 W
 ```
 
 There is also helper functions as the following that provide the current calendar week.
-```console
+```shell script
 > strava cw
 6
+```
+
+If you want to save your training in your dairy, you can use the following command:
+```shell script
+> strava report --current
+# Week 6
+Workout types:
+* bike: <placeholder>
+* run: <placeholder>
+* swim: <placeholder>
+* strength: <placeholder>
+
+## Summary
+Period:      <placeholder>
+Total tss:   13
+Total time:  38:53
+Bike #:      1
+
+|         Id | Start date                | Type   | Name                  | Moving time   | Distance   |
+|------------|---------------------------|--------|-----------------------|---------------|------------|
+| 4760729053 | 2021-02-09 17:04:59+01:00 | Ride   | Roller on the balcony | 38:53         |            |
+
+Notes: <placeholder>
+
+## Tuesday
+Workout: <placeholder>
+
+Name:                  Roller on the balcony
+                       Freezing cold, next time I bring shoe covers.
+Id:                    4760729053 (https://www.strava.com/activities/4760729053)
+---                    ---
+Gear:                  Canyon (10117.94 km)
+Start date:            2021-02-09 17:04:59+01:00
+Moving time:           38:53
+Distance:
+Average heartrate:     135 bpm
+Total elevation gain:
+---                    ---
+Tss:                   13
+Average power:         147 W
+Normalized power:      149 W
+Intensity factor:      0.45
+Variability index:     1.01
+Efficiency factor:     1.11
+Average cadence:       89 rpm
+Ftp:                   330 W
+
+Notes: <placeholder>
+Nutrition: <placeholder>
+Recovery: <placeholder>
 ```

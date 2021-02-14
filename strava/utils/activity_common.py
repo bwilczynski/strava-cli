@@ -83,7 +83,6 @@ def get_activity_from_ids(output, activity_ids, details=False, total=False, from
         for (key, value) in activity_total.items():
             if value == 0:
                 ACTIVITY_TOTAL_FORMATTERS.pop(key)
-#    _format_report_total(activity_total, _TOTAL_FORMATTERS, output)
         _format_activity_total(activity_total, output=output)
 
 
