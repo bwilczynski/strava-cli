@@ -13,3 +13,5 @@ from .profile import get_profile
 from .stats import get_stats
 from .calendar_week import get_cw
 from .report import get_report
+from .zones_heartrate import get_zones_heartrate
+from .zones_power import get_zones_power

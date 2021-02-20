@@ -3,6 +3,7 @@ import click
 from strava.commands import login, logout, get_profile, get_stats, set_config, post_upload, get_cw, get_report
 from strava.cli.activity import commands as activity
 from strava.cli.activities import commands as activities
+from strava.cli.zones import commands as zones
 
 
 @click.group()
@@ -22,6 +23,7 @@ cli.add_command(get_report)
 
 cli.add_command(activity.cli_activity)
 cli.add_command(activities.cli_activities)
+cli.add_command(zones.cli_zones)
 
 
 if __name__ == '__main__':
