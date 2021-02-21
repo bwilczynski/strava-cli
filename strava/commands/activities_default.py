@@ -25,7 +25,7 @@ from strava.utils.activities_common import as_table, SUMMARY_ACTIVITY_COLUMNS
               help='To only display specific index.')
 @login_required
 @format_result(table_columns=SUMMARY_ACTIVITY_COLUMNS)
-def get_activities(output, quiet, page, per_page, before, after, index):
+def get_all_activities(output, quiet, page, per_page, before, after, index):
     ga_kwargs = dict()
     if before:
         ga_kwargs['before'] = parse(before).timestamp()

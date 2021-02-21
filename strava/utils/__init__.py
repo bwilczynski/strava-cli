@@ -7,3 +7,4 @@ from .streams_ride import ride_detail
 from .streams_run import run_detail
 from .streams_workout import workout_detail
 from .streams_other import other_detail
+from .form import compute_ATL, compute_CTL, compute_daily_tss, get_tss_entry

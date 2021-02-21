@@ -3,6 +3,7 @@ import datetime
 from itertools import compress
 
 from strava import api
+from strava.commands.compute_form import get_form_with_formatted_date
 from strava.decorators import output_option, login_required, TableFormat, format_result, OutputType
 from strava.commands.activities_weekly import activities_ga_kwargs, weekly_activities
 from strava.formatters import update_activity_name, format_property, apply_formatters, noop_formatter
@@ -29,11 +30,13 @@ _TOTAL_FORMATTERS = {
               help='Get the last week activities')
 @click.option('--calendar_week', '-cw', type=int, nargs=2,
               help='Get the activities for the specified calendar week.\n Need two arguments (week number, year) like: -cw 2 2021.')
+@click.option('--form', is_flag=True, default=False,
+              help='Specify if fitness, fatigue and form should be displayed.')
 @click.option('--ftp', type=int,
               help='Specify an FTP to overwrite strava FTP.')
 @output_option()
 @login_required
-def get_report(output, current, last, calendar_week, all_days, ftp):
+def get_report(output, current, last, calendar_week, all_days, form, ftp):
     # If no flag is set, we use --current.
     if filter_unique_week_flag(current, last, calendar_week) == 0:
         current = True
@@ -42,6 +45,9 @@ def get_report(output, current, last, calendar_week, all_days, ftp):
     activities = api.get_activities(**ga_kwargs)
     activities.reverse()
     activity_ids = [a.get('id') for a in activities]
+
+    # To compute form.
+    date_monday = datetime.datetime.fromtimestamp(ga_kwargs['after'])
 
     # Title of the reporting.
     cw_report = datetime.datetime.strptime(activities[0].get('start_date'), '%Y-%m-%dT%H:%M:%SZ').isocalendar()[1]
@@ -64,11 +70,13 @@ def get_report(output, current, last, calendar_week, all_days, ftp):
 
     click.echo()
     weekly_activities(output=output, quiet=False, current=current, last=last, calendar_week=calendar_week)
+    if form:
+        click.echo()
+        get_form_with_formatted_date(output, date_monday + datetime.timedelta(days=6))
     click.echo('\nNotes: <placeholder>')
 
     # Days. Only the training days.
     activity_days = [datetime.datetime.strptime(a.get('start_date'), '%Y-%m-%dT%H:%M:%SZ').weekday() for a in activities]
-    #if not all_days else [0, 1, 2, 3, 4, 5, 6]
     for day in {0, 1, 2, 3, 4, 5, 6}:
         if day in activity_days:
             index = [day == activity_day for activity_day in activity_days]
@@ -78,13 +86,14 @@ def get_report(output, current, last, calendar_week, all_days, ftp):
                 format_activity(activity_buffer[id].get('activity'), activity_buffer[id].get('met_formatters'))
                 click.echo()
 
-            click.echo('Notes: <placeholder>\n'
-                       'Nutrition: <placeholder>\n'
-                       'Recovery: <placeholder>')
         elif all_days:
             click.echo(f'\n{_DAY_TITLE[day]}')
-            click.echo('Notes: <placeholder>\n'
-                       'Recovery: <placeholder>')
+
+        if form:
+            get_form_with_formatted_date(output, date_monday + datetime.timedelta(days=day))
+            click.echo()
+        click.echo('Notes: <placeholder>\n'
+                   'Recovery: <placeholder>')
 
 
 def split_activity_and_total(activity_ids, ftp=None):
