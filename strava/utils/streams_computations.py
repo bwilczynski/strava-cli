@@ -84,11 +84,14 @@ def efficiency_factor(stream):
     EF = NP / average HR (for ride done is HR zone 2)
     The second heartrate zone is used from strava
     """
-    zone_2_stream = _filter_stream_by_zone(stream, 2)
-    if len(zone_2_stream) > 0:
-        np = normalized_power(zone_2_stream['time'], zone_2_stream['watts'])
-        average_heartrate = mean(zone_2_stream['heartrate'])
-        return round(np / average_heartrate, 2)
+    try:
+        zone_2_stream = _filter_stream_by_zone(stream, 2)
+        if len(zone_2_stream) > 0:
+            np = normalized_power(zone_2_stream['time'], zone_2_stream['watts'])
+            average_heartrate = mean(zone_2_stream['heartrate'])
+            return round(np / average_heartrate, 2)
+    except:
+        pass
     return ''
 
 
