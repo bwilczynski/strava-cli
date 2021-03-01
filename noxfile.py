@@ -2,7 +2,7 @@ import nox
 
 nox.options.sessions = ["lint"]
 
-locations = "sonos", "noxfile.py"
+locations = "strava", "noxfile.py"
 
 
 @nox.session
