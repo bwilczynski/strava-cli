@@ -10,14 +10,17 @@ steps:
     versionSpec: '3.7'
     architecture: 'x64'
 
-- script: python -m pip install --upgrade pip setuptools wheel
+- script: python -m pip install --upgrade pip setuptools wheel nox
   displayName: 'Install tools'
+
+- script: nox
+  displayName: 'Check'
 
 - script: python setup.py sdist bdist_wheel
   displayName: 'Build'
 
 - task: CopyFiles@2 
-  inputs:   
+  inputs:
     contents: dist/**   
     targetFolder: $(Build.ArtifactStagingDirectory)
 
