@@ -4,6 +4,8 @@ from strava import api
 from strava.decorators import output_option, login_required, format_result, OutputType
 from strava.formatters import format_distance, format_seconds, format_elevation, format_activity_type
 
+import strava.settings
+
 _STATS_COLUMNS = (
     'type',
     'count',
@@ -14,10 +16,14 @@ _STATS_COLUMNS = (
 
 
 @click.command('stats')
+@click.option('--imperial_units', '-i', is_flag=True, default=False)
 @output_option()
 @login_required
 @format_result(table_columns=_STATS_COLUMNS)
-def get_stats(output):
+def get_stats(output, imperial_units):
+    if imperial_units:
+        strava.settings.IMPERIAL_UNITS = True
+
     athlete = api.get_athlete()
     athlete_id = athlete.get('id')
     result = api.get_stats(athlete_id)

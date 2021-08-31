@@ -14,3 +14,5 @@ CLIENT_SCOPE = ['activity:read_all,activity:write']
 AUTH_URL = f'{STRAVA_AUTH_API_BASE_URL}/authorize'
 TOKEN_URL = f'{STRAVA_AUTH_API_BASE_URL}/token'
 REFRESH_TOKEN_URL = TOKEN_URL
+
+IMPERIAL_UNITS = False
