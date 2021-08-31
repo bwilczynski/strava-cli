@@ -38,6 +38,7 @@ def format_heartrate(heartrate):
 def format_activity_type(activity_type):
     type_emojis = {
         'run': emoji.PERSON_RUNNING,
+        'walk': emoji.PERSON_WALKING,
         'ride': emoji.PERSON_BIKING,
         'swim': emoji.PERSON_SWIMMING,
         'workout': emoji.PERSON_LIFTING_WEIGHTS
