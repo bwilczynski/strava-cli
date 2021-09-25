@@ -13,7 +13,7 @@ from strava.commands import (
 
 
 @click.group()
-@click.version_option()
+@click.version_option(package_name="strava-cli")
 def cli():
     pass
 
