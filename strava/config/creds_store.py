@@ -1,6 +1,6 @@
 from strava.config import local_store
 
-ACCESS_TOKEN_FILE = 'access_token.json'
+ACCESS_TOKEN_FILE = "access_token.json"
 
 
 def save_access_token(data):

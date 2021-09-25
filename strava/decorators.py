@@ -13,16 +13,21 @@ from strava.formatters import humanize
 
 
 class OutputType(Enum):
-    JSON = 'json'
-    TABLE = 'table'
+    JSON = "json"
+    TABLE = "table"
 
 
 class TableFormat(Enum):
-    SIMPLE = 'simple'
-    PLAIN = 'plain'
+    SIMPLE = "simple"
+    PLAIN = "plain"
 
 
-def format_result(table_columns=None, single=False, show_table_headers=True, table_format=TableFormat.SIMPLE):
+def format_result(
+    table_columns=None,
+    single=False,
+    show_table_headers=True,
+    table_format=TableFormat.SIMPLE,
+):
     def decorator_format_result(func):
         @functools.wraps(func)
         def wrapper_format_result(*args, **kwargs):
@@ -34,21 +39,30 @@ def format_result(table_columns=None, single=False, show_table_headers=True, tab
                 table_data = [data] if single else data
                 rows = [[row[header] for header in table_columns] for row in table_data]
                 click.echo(
-                    tabulate(rows,
-                             headers=(humanize(header) for header in table_columns) if show_table_headers else (),
-                             tablefmt=table_format.value))
+                    tabulate(
+                        rows,
+                        headers=(humanize(header) for header in table_columns)
+                        if show_table_headers
+                        else (),
+                        tablefmt=table_format.value,
+                    )
+                )
 
             def print_quiet(data):
-                ids = [str(x.get('id')) for x in data]
+                ids = [str(x.get("id")) for x in data]
                 click.echo(os.linesep.join(ids))
                 pass
 
             res = func(*args, **kwargs)
 
-            if kwargs.get('quiet', False):
+            if kwargs.get("quiet", False):
                 print_res = print_quiet
             else:
-                print_res = print_json if kwargs.get('output') == OutputType.JSON.value else print_table
+                print_res = (
+                    print_json
+                    if kwargs.get("output") == OutputType.JSON.value
+                    else print_table
+                )
 
             print_res(res)
 
@@ -59,8 +73,17 @@ def format_result(table_columns=None, single=False, show_table_headers=True, tab
 
 def output_option(*args, **kwargs):
     def decorator_output_option(func):
-        kwargs.setdefault('default', 'table')
-        return option(*(args or ('--output', '-o',)), **kwargs)(func)
+        kwargs.setdefault("default", "table")
+        return option(
+            *(
+                args
+                or (
+                    "--output",
+                    "-o",
+                )
+            ),
+            **kwargs
+        )(func)
 
     return decorator_output_option
 
@@ -69,7 +92,7 @@ def login_required(func):
     @functools.wraps(func)
     def wrapper_login_required(*args, **kwargs):
         if creds_store.get_access_token() is None:
-            click.echo('Not logged in! Run `strava login` first.')
+            click.echo("Not logged in! Run `strava login` first.")
             return None
         return func(*args, **kwargs)
 
@@ -80,8 +103,11 @@ def config_required(func):
     @functools.wraps(func)
     def wrapper_config_required(*args, **kwargs):
         if settings.STRAVA_CLIENT_ID is None or settings.STRAVA_CLIENT_SECRET is None:
-            click.echo('Not configured. '
-                       'Run `strava config` or set environment variables STRAVA_CLIENT_ID and STRAVA_CLIENT_SECRET.')
+            click.echo(
+                "Not configured. "
+                "Run `strava config` or set environment "
+                "variables STRAVA_CLIENT_ID and STRAVA_CLIENT_SECRET."
+            )
             return None
         return func(*args, **kwargs)
 
