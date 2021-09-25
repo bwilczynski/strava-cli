@@ -5,8 +5,10 @@ from datetime import datetime, timezone
 import click
 
 from strava import emoji
+import strava.settings
 
 N_A = "N/A"
+KM_TO_MI = 0.6213712
 
 
 def format_seconds(seconds):
@@ -23,12 +25,21 @@ def format_date(date):
 
 
 def format_distance(distance):
-    distance_km = math.floor(distance / 10) / 100
-    return f"{distance_km:.2f} km"
+    distance = math.floor(distance / 10) / 100
+    suffix = "km"
+    if strava.settings.IMPERIAL_UNITS:
+        suffix = "mi"
+        distance = distance * KM_TO_MI
+    return f"{distance:.2f} {suffix}"
 
 
 def format_speed(speed):
-    return f"{format_seconds(1000 / speed)} /km" if speed > 0 else None
+    suffix = "km"
+    if strava.settings.IMPERIAL_UNITS:
+        suffix = "mi"
+        speed = speed * KM_TO_MI
+
+    return f"{format_seconds(1000 / speed)} /{suffix}" if speed > 0 else None
 
 
 def format_heartrate(heartrate):
@@ -38,6 +49,7 @@ def format_heartrate(heartrate):
 def format_activity_type(activity_type):
     type_emojis = {
         "run": emoji.PERSON_RUNNING,
+        "walk": emoji.PERSON_WALKING,
         "ride": emoji.PERSON_BIKING,
         "swim": emoji.PERSON_SWIMMING,
         "workout": emoji.PERSON_LIFTING_WEIGHTS,

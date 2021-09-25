@@ -22,15 +22,20 @@ from strava.formatters import (
     format_activity_name,
     apply_formatters,
 )
+import strava.settings
 
 _ACTIVITY_COLUMNS = ("key", "value")
 
 
 @click.command("activity")
 @click.argument("activity_ids", required=True, nargs=-1)
+@click.option("--imperial_units", "-i", is_flag=True, default=False)
 @output_option()
 @login_required
-def get_activity(output, activity_ids):
+def get_activity(output, activity_ids, imperial_units):
+    if imperial_units:
+        strava.settings.IMPERIAL_UNITS = True
+
     for i, activity_id in enumerate(activity_ids):
         if i > 0:
             click.echo()

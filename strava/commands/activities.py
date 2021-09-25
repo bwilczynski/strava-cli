@@ -12,6 +12,7 @@ from strava.formatters import (
     format_activity_name,
     apply_formatters,
 )
+import strava.settings
 
 _SUMMARY_ACTIVITY_COLUMNS = (
     "id",
@@ -39,14 +40,18 @@ _SUMMARY_ACTIVITY_FORMATTERS = {
 @click.option("--before", "-B")
 @click.option("--after", "-A")
 @click.option("--index", "-I", type=int)
+@click.option("--imperial_units", "-i", is_flag=True, default=False)
 @login_required
 @format_result(table_columns=_SUMMARY_ACTIVITY_COLUMNS)
-def get_activities(output, quiet, page, per_page, before, after, index):
+def get_activities(output, quiet, page, per_page, before, after, index, imperial_units):
     ga_kwargs = dict()
     if before:
         ga_kwargs["before"] = parse(before).timestamp()
     if after:
         ga_kwargs["after"] = parse(after).timestamp()
+
+    if imperial_units:
+        strava.settings.IMPERIAL_UNITS = True
 
     result = api.get_activities(page=page, per_page=per_page, **ga_kwargs)
     if index is not None:
