@@ -1,6 +1,15 @@
 import click
 
-from strava.commands import login, logout, get_activities, get_activity, get_profile, get_stats, set_config, post_upload
+from strava.commands import (
+    login,
+    logout,
+    get_activities,
+    get_activity,
+    get_profile,
+    get_stats,
+    set_config,
+    post_upload,
+)
 
 
 @click.group()
@@ -18,5 +27,5 @@ cli.add_command(get_stats)
 cli.add_command(set_config)
 cli.add_command(post_upload)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli()

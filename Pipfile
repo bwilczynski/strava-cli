@@ -7,10 +7,10 @@ verify_ssl = true
 pylint = "*"
 autopep8 = "*"
 twine = "*"
-v = {editable = true,version = "*"}
+nox = "*"
 
 [packages]
 strava-cli = {editable = true,path = "."}
 
 [requires]
-python_version = "3.7"
+python_version = "3.9"
