@@ -2,7 +2,7 @@ import os
 
 import setuptools
 
-VERSION = '0.5.0'
+VERSION = '0.6.0'
 DESCRIPTION = 'Strava Command-Line Tools'
 
 here = os.path.abspath(os.path.dirname(__file__))
