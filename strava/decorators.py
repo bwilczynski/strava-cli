@@ -21,7 +21,6 @@ class TableFormat(Enum):
     SIMPLE = "simple"
     PLAIN = "plain"
 
-
 def format_result(
     table_columns=None,
     single=False,
@@ -38,13 +37,18 @@ def format_result(
             def print_table(data):
                 table_data = [data] if single else data
                 rows = [[row[header] for header in table_columns] for row in table_data]
+                output = kwargs.get("output")
+                if output == 'table':
+                    tablefmt = table_format.value
+                else:
+                    tablefmt = output
                 click.echo(
                     tabulate(
                         rows,
                         headers=(humanize(header) for header in table_columns)
                         if show_table_headers
                         else (),
-                        tablefmt=table_format.value,
+                        tablefmt=tablefmt
                     )
                 )
 
