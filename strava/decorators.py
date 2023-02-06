@@ -38,13 +38,19 @@ def format_result(
             def print_table(data):
                 table_data = [data] if single else data
                 rows = [[row[header] for header in table_columns] for row in table_data]
+                output = kwargs.get("output")
+                tablefmt = table_format.value
+                if output.index("table") == 0:
+                    suffix = output.removeprefix("table")
+                    if suffix.startswith("+"):
+                        tablefmt = suffix[1:]
                 click.echo(
                     tabulate(
                         rows,
                         headers=(humanize(header) for header in table_columns)
                         if show_table_headers
                         else (),
-                        tablefmt=table_format.value,
+                        tablefmt=tablefmt,
                     )
                 )
 
