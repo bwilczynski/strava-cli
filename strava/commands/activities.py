@@ -64,7 +64,7 @@ def _as_table(result):
 
 
 def _format_summary_activity(activity):
-    def format_name(name):
+    def format_name(name, activity):
         return format_activity_name(name, activity)
 
     formatters = {"name": format_name, **_SUMMARY_ACTIVITY_FORMATTERS}

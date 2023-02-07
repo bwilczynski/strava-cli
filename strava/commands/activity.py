@@ -53,7 +53,7 @@ def _format_activity(result, output=None):
 
 
 def _as_table(activity):
-    def format_name(name):
+    def format_name(name, activity = None):
         activity_name = format_activity_name(name, activity)
         activity_description = activity.get("description")
         return (
@@ -69,7 +69,7 @@ def _as_table(activity):
         return f"{click.style(emoji.RED_HEART, fg='red')} {format_heartrate(heartrate)}"
 
     def format_speed_with_emoji(speed):
-        return f"{click.style(emoji.RUNNING_SHOE, fg='yellow')} {format_speed(speed)}"
+        return f"{click.style(emoji.RUNNING_SHOE, fg='yellow')} {format_speed(speed, activity)}"
 
     def format_elevation_with_emoji(elevation):
         difference = round(elevation)
