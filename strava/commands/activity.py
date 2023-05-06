@@ -53,7 +53,7 @@ def _format_activity(result, output=None):
 
 
 def _as_table(activity):
-    def format_name(name, activity = None):
+    def format_name(name, activity=None):
         activity_name = format_activity_name(name, activity)
         activity_description = activity.get("description")
         return (

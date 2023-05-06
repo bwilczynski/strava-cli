@@ -11,7 +11,7 @@ N_A = "N/A"
 KM_TO_MI = 0.6213712
 
 
-def format_seconds(seconds, activity = None):
+def format_seconds(seconds, activity=None):
     if seconds > 3600:
         mins = math.floor(seconds / 60)
         return f"{math.floor(mins / 60):.0f}h {mins % 60:.0f}m"
@@ -19,12 +19,12 @@ def format_seconds(seconds, activity = None):
         return f"{math.floor(seconds / 60):02.0f}:{seconds % 60:02.0f}"
 
 
-def format_date(date, activity = None):
+def format_date(date, activity=None):
     utc_date = datetime.strptime(date, "%Y-%m-%dT%H:%M:%SZ")
     return utc_date.replace(tzinfo=timezone.utc).astimezone()
 
 
-def format_distance(distance, activity = None):
+def format_distance(distance, activity=None):
     distance = math.floor(distance / 10) / 100
     suffix = "km"
     if strava.settings.IMPERIAL_UNITS:
@@ -35,9 +35,16 @@ def format_distance(distance, activity = None):
 
 def format_speed(speed, activity):
     activity_types_with_speed = [
-        "alpineski", "backcountryski", "ebikeride", "handcycle",
-        "nordicski", "ride", "rollerski", "skateboard", "snowboard",
-        "virtualride"
+        "alpineski",
+        "backcountryski",
+        "ebikeride",
+        "handcycle",
+        "nordicski",
+        "ride",
+        "rollerski",
+        "skateboard",
+        "snowboard",
+        "virtualride",
     ]
 
     suffix = "km"
@@ -50,14 +57,16 @@ def format_speed(speed, activity):
     if activity.get("type").lower() in activity_types_with_speed:
         return f"{speed * 3.6:.1f} {postfix}" if speed > 0 else None
     else:
-        return f"{format_seconds(1000 / speed, activity)} /{suffix}" if speed > 0 else None
+        return (
+            f"{format_seconds(1000 / speed, activity)} /{suffix}" if speed > 0 else None
+        )
 
 
-def format_heartrate(heartrate, activity = None):
+def format_heartrate(heartrate, activity=None):
     return f"{heartrate:.0f} bpm"
 
 
-def format_activity_type(activity_type, activity = None):
+def format_activity_type(activity_type, activity=None):
     type_emojis = {
         "run": emoji.PERSON_RUNNING,
         "walk": emoji.PERSON_WALKING,
@@ -68,7 +77,7 @@ def format_activity_type(activity_type, activity = None):
     return type_emojis.get(activity_type.lower(), "")
 
 
-def format_elevation(elevation, activity = None):
+def format_elevation(elevation, activity=None):
     return f"{round(elevation)} m"
 
 
@@ -79,11 +88,11 @@ def humanize(word):
     return word
 
 
-def noop_formatter(value, activity = None):
+def noop_formatter(value, activity=None):
     return value
 
 
-def format_activity_name(name, activity = None):
+def format_activity_name(name, activity=None):
     activity_type = format_activity_type(activity.get("type"))
     is_race = activity.get("workout_type", 0) == 1
     return f"{activity_type} {click.style(name, bold=is_race)}"
